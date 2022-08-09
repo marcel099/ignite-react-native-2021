@@ -22,5 +22,6 @@ module.exports = {
     noUseBeforeDefine: 'off',
     'react/jsx-no-bind': 'off',
     'react/prop-types': 'off',
+    'react/jsx-filename-extension': 'off',
   },
 };

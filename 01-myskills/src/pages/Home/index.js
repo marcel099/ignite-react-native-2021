@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   Text, TextInput, View,
@@ -25,7 +25,7 @@ export function Home() {
   } else if (currentHour >= 12 && currentHour < 18) {
     greeting = 'Good afternoon';
   } else {
-    greeting = 'Good ninght';
+    greeting = 'Good night';
   }
 
   return (
