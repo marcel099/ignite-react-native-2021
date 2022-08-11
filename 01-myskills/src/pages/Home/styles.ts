@@ -24,9 +24,4 @@ export const styles = StyleSheet.create({
     borderRadius: 7,
     marginBottom: 20,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 17,
-    fontWeight: 'bold',
-  },
 });

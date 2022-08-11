@@ -9,12 +9,29 @@ import { SkillCard } from '../../components/SkillCard';
 
 import { styles } from './styles';
 
+interface Skill {
+  id: string;
+  name: string;
+}
+
 export function Home() {
-  const [mySkills, setMySkills] = useState('');
+  const [mySkills, setMySkills] = useState<Skill[]>([]);
   const [newSkill, setNewSkill] = useState('');
 
   function handleAddNewSkill() {
-    setMySkills((previousValue) => [...previousValue, newSkill]);
+    const skill = {
+      id: String(new Date().getTime()),
+      name: newSkill,
+    }
+
+    setNewSkill('');
+    setMySkills((previousValue) => [...previousValue, skill]);
+  }
+
+  function handleRemoveSkill(id: string) {
+    setMySkills(previousValue => previousValue.filter(
+      skill => skill.id !== id
+    ));
   }
 
   let greeting = ''; const
@@ -42,9 +59,13 @@ export function Home() {
         placeholder="New skill"
         placeholderTextColor="#555"
         onChangeText={setNewSkill}
+        value={newSkill}
       />
 
-      <Button onPress={handleAddNewSkill} />
+      <Button
+        onPress={handleAddNewSkill}
+        title="Add"
+      />
 
       <Text style={[styles.title, { marginVertical: 50 }]}>
         My Skills
@@ -52,8 +73,13 @@ export function Home() {
 
       <FlatList
         data={mySkills}
-        keyExtractor={(item) => item}
-        renderItem={({ item }) => <SkillCard skill={item} />}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <SkillCard
+            skill={item.name}
+            onPress={() => handleRemoveSkill(item.id)}
+          />
+        )}
       />
     </View>
   );

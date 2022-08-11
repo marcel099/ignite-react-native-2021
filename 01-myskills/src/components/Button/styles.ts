@@ -7,4 +7,9 @@ export const styles = StyleSheet.create({
     borderRadius: 7,
     alignItems: 'center',
   },
+  buttonText: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
 });
