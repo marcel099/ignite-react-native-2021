@@ -1,3 +1,4 @@
+import { RectButton } from "react-native-gesture-handler";
 import styled, { css } from "styled-components/native";
 import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -9,18 +10,13 @@ interface ContainerProps {
   type: TransactionType;
 }
 
-export const Container = styled.TouchableOpacity<ContainerProps>`
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  
+export const Container = styled.View<ContainerProps>`
   border-width: ${({ isActive }) => isActive ? 0 : 1.5 }px;
   border-style: solid;
   border-color: ${({ theme }) => theme.colors.text};
   border-radius: 5px;
   
   width: 48%;
-  padding: ${RFValue(16)}px 0;
   
   ${({ isActive, type }) => isActive && type === 'deposit' && css`
     background-color: ${({ theme }) => theme.colors.lightSuccess};
@@ -29,6 +25,14 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
   ${({ isActive, type }) => isActive && type === 'withdraw' && css`
     background-color: ${({ theme }) => theme.colors.lightDanger};
   `}
+`;
+
+export const Button = styled(RectButton)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  
+  padding: ${RFValue(16)}px 0;
 `;
 
 interface IconProps {

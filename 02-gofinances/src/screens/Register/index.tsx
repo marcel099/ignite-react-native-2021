@@ -3,7 +3,7 @@ import {
   Alert,
   Keyboard,
   Modal,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from "react-native";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
@@ -102,7 +102,9 @@ export function Register() {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback
+      onPress={Keyboard.dismiss}
+    >
       <Container>
         <Header>
           <Title>Cadastro</Title>
