@@ -2,6 +2,8 @@ import styled, { css } from "styled-components/native";
 import { Feather } from "@expo/vector-icons";
 import { RFValue } from "react-native-responsive-fontsize";
 
+const icon = Feather;
+
 import { HightlightCardType } from ".";
 
 interface ContainerProps {
