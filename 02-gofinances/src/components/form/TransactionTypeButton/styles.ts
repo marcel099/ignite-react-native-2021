@@ -23,11 +23,11 @@ export const Container = styled.TouchableOpacity<ContainerProps>`
   padding: ${RFValue(16)}px 0;
   
   ${({ isActive, type }) => isActive && type === 'deposit' && css`
-    background-color: ${({ theme }) => theme.colors.lightDanger};
+    background-color: ${({ theme }) => theme.colors.lightSuccess};
   `}
 
   ${({ isActive, type }) => isActive && type === 'withdraw' && css`
-    background-color: ${({ theme }) => theme.colors.lightSuccess};
+    background-color: ${({ theme }) => theme.colors.lightDanger};
   `}
 `;
 
