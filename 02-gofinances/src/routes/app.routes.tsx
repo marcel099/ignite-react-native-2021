@@ -6,14 +6,15 @@ import { Feather } from "@expo/vector-icons"
 import { Dashboard } from '../screens/Dashboard';
 import { Register } from '../screens/Register';
 
-export type AppBottomParamList = {
-  Dashboard: undefined;
-  Register: undefined;
-  // Summary: undefined;
+export type AppBottomTabParamList = {
+  Listagem: undefined;
+  Cadastrar: undefined;
+  Resumo: undefined;
 };
 
 
-const { Navigator, Screen } = createBottomTabNavigator();
+const { Navigator, Screen } =
+  createBottomTabNavigator<AppBottomTabParamList>();
 
 export function AppRoutes() {
   const theme = useTheme();

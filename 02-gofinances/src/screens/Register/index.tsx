@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Keyboard,
   Modal,
   TouchableWithoutFeedback
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import uuid from "react-native-uuid";
 
+import { TRANSACTIONS_COLLECTION } from "../../global/configs/storage";
+import { AppBottomTabParamList } from "../../routes/app.routes";
 import { Button } from "../../components/form/Button";
 import { CategorySelectButton } from "../../components/form/CategorySelectButton";
 import { InputRHF } from "../../components/form/InputRHF";
@@ -49,10 +54,16 @@ const schema = Yup.object().shape({
     .required('O valor é obrigatório'),
 });
 
+type RegisterScreenProp =
+  NavigationProp<AppBottomTabParamList, 'Cadastrar'>;
+
 export function Register() {
+  const navigation = useNavigation<RegisterScreenProp>();
+
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -82,7 +93,14 @@ export function Register() {
     setIsCategoryModalOpen(false);
   }
 
-  function handleRegisterTransaction(form: FormData) {
+  function resetForm() {
+    setSelectedTransactionType(null);
+    setSelectedCategory(null);
+
+    reset();
+  }
+
+  async function handleRegisterTransaction(form: FormData) {
     if (!selectedTransactionType) {
       return Alert.alert("Selecione o tipo da transação");
     }
@@ -91,15 +109,47 @@ export function Register() {
       return Alert.alert("Selecione a categoria");
     }
 
-    const data = {
+    const newTransaction = {
+      id: String(uuid.v4()),
       name: form.name,
       price: form.price,
       selectedTransactionType,
       category: selectedCategory?.id,
+      date: new Date(),
     };
 
-    console.log(data);
+    try {
+      const data = 
+        await AsyncStorage.getItem(TRANSACTIONS_COLLECTION);
+
+      let currentTransactions = JSON.parse(data!);
+
+      if (currentTransactions !== null) {
+        currentTransactions.push(newTransaction);
+      } else {
+        currentTransactions = [newTransaction]
+      }
+
+      await AsyncStorage.setItem(
+        TRANSACTIONS_COLLECTION,
+        JSON.stringify(currentTransactions)
+      );
+
+      resetForm();
+
+      console.log(navigation);
+
+      navigation.navigate('Listagem');
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Não foi possível salvar");
+    }
   }
+
+  useEffect(() => {
+    AsyncStorage.getItem(TRANSACTIONS_COLLECTION) 
+      .then(console.log)
+  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

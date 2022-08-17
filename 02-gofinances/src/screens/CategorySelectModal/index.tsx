@@ -2,7 +2,7 @@ import { FlatList } from "react-native";
 
 import { Button } from "../../components/form/Button";
 import { CategoryDTO } from "../Register";
-import { categories } from "../../utils/categories";
+import { categories } from "../../global/utils/categories";
 
 import {
   Container,
