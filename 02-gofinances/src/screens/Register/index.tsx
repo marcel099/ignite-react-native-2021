@@ -18,6 +18,7 @@ import { Button } from "../../components/form/Button";
 import { CategorySelectButton } from "../../components/form/CategorySelectButton";
 import { InputRHF } from "../../components/form/InputRHF";
 import { TransactionTypeButton } from "../../components/form/TransactionTypeButton";
+import { Transaction } from "../Dashboard";
 import { CategorySelectModal } from "../CategorySelectModal";
 
 import {
@@ -36,19 +37,19 @@ export interface Category {
   color: string;
 }
 
-export type CategoryDTO = Pick<Category, 'id' | 'name'>;
+export type CategoryDTO = Pick<Category, 'id' | 'name' | 'icon'>;
 
 export type TransactionType = 'deposit' | 'withdraw';
 
 interface FormData {
-  name: string;
-  price: string;
+  title: string;
+  amount: string;
 }
 
 const schema = Yup.object().shape({
-  name: Yup
-    .string().required('Nome é obrigatório'),
-  price: Yup
+  title: Yup
+    .string().required('Título é obrigatório'),
+  amount: Yup
     .number().typeError('Informe um valor numérico')
     .positive('O valor não pode ser negativo')
     .required('O valor é obrigatório'),
@@ -109,13 +110,13 @@ export function Register() {
       return Alert.alert("Selecione a categoria");
     }
 
-    const newTransaction = {
+    const newTransaction: Transaction = {
       id: String(uuid.v4()),
-      name: form.name,
-      price: form.price,
-      selectedTransactionType,
-      category: selectedCategory?.id,
-      date: new Date(),
+      title: form.title,
+      amount: form.amount,
+      type: selectedTransactionType,
+      categoryId: selectedCategory.id,
+      date: new Date().toJSON(),
     };
 
     try {
@@ -137,19 +138,12 @@ export function Register() {
 
       resetForm();
 
-      console.log(navigation);
-
       navigation.navigate('Listagem');
     } catch (error) {
       console.log(error);
       Alert.alert("Não foi possível salvar");
     }
   }
-
-  useEffect(() => {
-    AsyncStorage.getItem(TRANSACTIONS_COLLECTION) 
-      .then(console.log)
-  }, []);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -160,19 +154,19 @@ export function Register() {
         <Form>
           <Fields>
             <InputRHF
-              name="name"
+              name="title"
               control={control}
-              placeholder="Nome"
+              placeholder="Título"
               autoCapitalize="sentences"
               autoCorrect={false}
-              error={errors.name?.message}
+              error={errors.title?.message}
             />
             <InputRHF
-              name="price"
+              name="amount"
               control={control}
               placeholder="Preço"
               keyboardType="number-pad"
-              error={errors.price?.message}
+              error={errors.amount?.message}
             />
             <TransactionTypeContainer>
               <TransactionTypeButton
@@ -189,7 +183,7 @@ export function Register() {
               />
             </TransactionTypeContainer>
             <CategorySelectButton
-              title={selectedCategory?.name ?? 'Categoria'}
+              name={selectedCategory?.name ?? 'Categoria'}
               onPress={handleOpenCategorySelectModal}
             />
           </Fields>

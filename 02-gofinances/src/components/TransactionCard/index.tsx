@@ -1,4 +1,5 @@
 import { Transaction } from "../../screens/Dashboard";
+import { categories } from "../../global/utils/categories";
 
 import {
   Container,
@@ -22,7 +23,7 @@ export function TransactionCard({
     type,
     title,
     amount,
-    category,
+    categoryId,
     date,
   }
 }: Props) {
@@ -30,14 +31,18 @@ export function TransactionCard({
     amount = `- ${amount}`
   }
 
+  const category = categories.find(category => category.id === categoryId);
+
   return (
     <Container>
       <Title>{title}</Title>
       <Amount type={type}>{amount}</Amount>
       <Footer>
         <Category>
-          <Icon name={category.icon} />
-          <CategoryName>{category.name}</CategoryName>
+          <Icon name={category?.icon ?? 'meh'} />
+          <CategoryName>
+            {category?.name ?? 'Categoria não encontrada'}
+          </CategoryName>
         </Category>
         <Date>{date}</Date>
       </Footer>

@@ -1,8 +1,12 @@
+import { useCallback, useEffect, useState } from 'react';
 import { View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard } from '../../components/TransactionCard';
+import { TRANSACTIONS_COLLECTION } from '../../global/configs/storage';
 
 import {
   Container,
@@ -20,11 +24,6 @@ import {
   Transactions
 } from './styles';
 
-interface Category {
-  name: string;
-  icon: string;
-}
-
 export type TransactionType = 'deposit' | 'withdraw';
 
 export interface Transaction {
@@ -32,37 +31,47 @@ export interface Transaction {
   type: TransactionType;
   title: string;
   amount: string;
-  category: Category;
+  categoryId: string;
   date: string;
 }
 
 export function Dashboard() {
-  const transactions: Transaction[] = [
-    {
-      id: '1',
-      type: 'deposit',
-      title: "Desenvolvimento de site",
-      amount: "R$ 12.000,00",
-      category: { name: 'Vendas', icon: 'dollar-sign' },
-      date: "13/04/2022",
-    },
-    {
-      id: '2',
-      type: 'withdraw',
-      title: "Hamburgueria Pizzy",
-      amount: "R$ 59,00",
-      category: { name: 'Alimentação', icon: 'coffee' },
-      date: "10/04/2022",
-    },
-    {
-      id: '3',
-      type: 'withdraw',
-      title: "Aluguel do apartamento",
-      amount: "R$ 1.200,00",
-      category: { name: 'Casa', icon: 'home' },
-      date: "27/03/2022",
-    },
-];
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+
+  async function loadTransactions() {
+    const data = 
+      await AsyncStorage.getItem(TRANSACTIONS_COLLECTION);
+
+    if (data !== null) {
+      let loadedTransactions = JSON.parse(data) as Transaction[];
+
+      const formattedTransactions =
+        loadedTransactions.map((item) => {
+          const formattedAmount = Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(Number(item.amount));
+
+          const formattedDate = Intl.DateTimeFormat('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          }).format(new Date(item.date));
+
+          return {
+            ...item,
+            amount: formattedAmount,
+            date: formattedDate,
+          }
+        });
+  
+      setTransactions(formattedTransactions);
+    }
+  }
+
+  useFocusEffect(useCallback(() => {
+    loadTransactions()
+  }, []));
 
   return (
     <Container>

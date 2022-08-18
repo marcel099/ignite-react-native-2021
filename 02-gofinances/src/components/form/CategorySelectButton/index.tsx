@@ -2,18 +2,18 @@ import { TouchableOpacityProps } from "react-native";
 
 import {
   Container,
-  CategoryTitle,
+  CategoryName,
   Icon,
 } from "./styles";
 
 interface Props extends TouchableOpacityProps {
-  title: string;
+  name: string;
 }
 
-export function CategorySelectButton({ title, ...rest }: Props) {
+export function CategorySelectButton({ name, ...rest }: Props) {
   return (
     <Container {...rest}>
-      <CategoryTitle>{title}</CategoryTitle>
+      <CategoryName>{name}</CategoryName>
       <Icon name="chevron-down" />
     </Container>
   );
