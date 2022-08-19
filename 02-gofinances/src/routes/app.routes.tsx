@@ -5,6 +5,7 @@ import { Feather } from "@expo/vector-icons"
 
 import { Dashboard } from '../screens/Dashboard';
 import { Register } from '../screens/Register';
+import { Summary } from '../screens/Summary';
 
 export type AppBottomTabParamList = {
   Listagem: undefined;
@@ -60,7 +61,7 @@ export function AppRoutes() {
       />
       <Screen
         name="Resumo"
-        component={Register}
+        component={Summary}
         options={{
           tabBarIcon: (({ size, color }) => (
             <Feather

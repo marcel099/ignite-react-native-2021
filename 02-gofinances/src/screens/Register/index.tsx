@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Keyboard,
@@ -14,6 +14,7 @@ import uuid from "react-native-uuid";
 
 import { TRANSACTIONS_COLLECTION } from "../../global/configs/storage";
 import { AppBottomTabParamList } from "../../routes/app.routes";
+import { BaseScreen } from "../../components/BaseScreen";
 import { Button } from "../../components/form/Button";
 import { CategorySelectButton } from "../../components/form/CategorySelectButton";
 import { InputRHF } from "../../components/form/InputRHF";
@@ -22,9 +23,6 @@ import { Transaction } from "../Dashboard";
 import { CategorySelectModal } from "../CategorySelectModal";
 
 import {
-  Container,
-  Header,
-  Title,
   Form,
   Fields,
   TransactionTypeContainer,
@@ -147,10 +145,7 @@ export function Register() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <Container>
-        <Header>
-          <Title>Cadastro</Title>
-        </Header>
+      <BaseScreen title="Cadastro">
         <Form>
           <Fields>
             <InputRHF
@@ -199,7 +194,7 @@ export function Register() {
             closeCategorySelectModal={handleCloseCategorySelectModal}
           />
         </Modal>
-      </Container>
+      </BaseScreen>
     </TouchableWithoutFeedback>
   );
 }
