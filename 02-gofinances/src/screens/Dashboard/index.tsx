@@ -1,11 +1,17 @@
-import { useCallback, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from 'styled-components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard } from '../../components/TransactionCard';
+import {
+  formatDateToLocaleDate,
+  formatDateToLongDate,
+  formatNumberToCurrency
+} from '../../global/utils/formatters';
 import { TRANSACTIONS_COLLECTION } from '../../global/configs/storage';
 
 import {
@@ -21,7 +27,8 @@ import {
   HighlightCards,
   TransactionsContainer,
   Title,
-  Transactions
+  Transactions,
+  LoadContainer,
 } from './styles';
 
 export type TransactionType = 'deposit' | 'withdraw';
@@ -35,28 +42,104 @@ export interface Transaction {
   date: string;
 }
 
+interface HighlightData {
+  formattedAmount: string;
+  message: string;
+}
+
+interface HighlightsData {
+  profits: HighlightData;
+  expenses: HighlightData;
+  total: HighlightData;
+}
+
 export function Dashboard() {
+  const theme = useTheme();
+
+  const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [highlightData, setHighlightData] =
+    useState<HighlightsData | null>(null);
+
+  function getLastTransactionFormattedDate(
+    transactions: Transaction[],
+    type: TransactionType
+  ): string {
+    try {
+      const transactionsDateInTimestamp = transactions
+        .filter(transaction => transaction.type === type)
+        .map(transaction => new Date(transaction.date).getTime());
+
+      const lastTransactionDate =
+        Math.max.apply(Math, transactionsDateInTimestamp);
+
+      const formattedLastExpenseTransactionDate =
+        formatDateToLongDate(lastTransactionDate);
+
+      return formattedLastExpenseTransactionDate;
+    } catch(err) {
+      console.log(err);
+      return '';
+    }
+  }
+
+  function getTransactionsIntervalMessage(
+    transactions: Transaction[]
+  ): string {
+    try {
+      const transactionsDateInTimestamp = transactions
+        .map(transaction => new Date(transaction.date).getTime());
+
+      const firstTransactionDate =
+        Math.min.apply(Math, transactionsDateInTimestamp);
+      const lastTransactionDate =
+        Math.max.apply(Math, transactionsDateInTimestamp);
+
+      const formattedFirstTransactionDate =
+        formatDateToLongDate(firstTransactionDate);
+
+      const formattedLastTransactionDate =
+        formatDateToLongDate(lastTransactionDate);
+
+      return `${
+        formattedFirstTransactionDate.replace(/ de \d{4}/, '')
+      } à ${
+        formattedLastTransactionDate.replace(/ de \d{4}/, '')
+      }`;
+    } catch(err) {
+      console.log(err);
+      return '';
+    }
+  }
 
   async function loadTransactions() {
+    if (isLoadingTransactions === false) {
+      setIsLoadingTransactions(true);
+    }
+
     const data = 
       await AsyncStorage.getItem(TRANSACTIONS_COLLECTION);
 
     if (data !== null) {
+      let profitsAmount = 0;
+      let expensesAmount = 0;
+
       let loadedTransactions = JSON.parse(data) as Transaction[];
 
       const formattedTransactions =
         loadedTransactions.map((item) => {
-          const formattedAmount = Intl.NumberFormat('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-          }).format(Number(item.amount));
+          let numericAmount = Number(item.amount);
 
-          const formattedDate = Intl.DateTimeFormat('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          }).format(new Date(item.date));
+          if (item.type === 'deposit') {
+            profitsAmount += numericAmount;
+          } else {
+            expensesAmount += numericAmount;
+          }
+
+          const formattedAmount = formatNumberToCurrency(numericAmount);
+          const formattedDate = formatDateToLocaleDate(
+            new Date(item.date)
+          );
 
           return {
             ...item,
@@ -64,8 +147,41 @@ export function Dashboard() {
             date: formattedDate,
           }
         });
+
+      const formattedProfitsAmount =
+        formatNumberToCurrency(profitsAmount);
+      const formattedExpensesAmount =
+        formatNumberToCurrency(expensesAmount);
+      const formattedTotalAmount =
+        formatNumberToCurrency(profitsAmount - expensesAmount);
+
+      const formattedLastProfitTransactionDate =
+        getLastTransactionFormattedDate(loadedTransactions, 'deposit');
+
+      const formattedLastExpenseTransactionDate =
+        getLastTransactionFormattedDate(loadedTransactions, 'withdraw');
+
+      const transactionsIntervalMessage =
+        getTransactionsIntervalMessage(loadedTransactions);
   
       setTransactions(formattedTransactions);
+      setHighlightData({
+        profits: {
+          formattedAmount: formattedProfitsAmount,
+          message:
+            `Última entrada dia ${formattedLastProfitTransactionDate}`,
+        },
+        expenses: {
+          formattedAmount: formattedExpensesAmount,
+          message:
+            `Última saída dia ${formattedLastExpenseTransactionDate}`,
+        },
+        total: {
+          formattedAmount: formattedTotalAmount,
+          message: transactionsIntervalMessage,
+        }
+      });
+      setIsLoadingTransactions(false);
     }
   }
 
@@ -75,57 +191,71 @@ export function Dashboard() {
 
   return (
     <Container>
-      <Header>
-        <UserContainer>
-          <UserInfo>
-            <UserPhoto
-              source={{ uri: 'https://github.com/marcel099.png' }}
+      {
+      isLoadingTransactions
+        ? (
+          <LoadContainer>
+            <ActivityIndicator
+              color={theme.colors.primary}
+              size="large"
             />
-            <UserGreeting>
-              <Greeting>Olá,</Greeting>
-              <UserName>Marcelo</UserName>
-            </UserGreeting>
-          </UserInfo>
-          <Icon name="power" />
-        </UserContainer>
+          </LoadContainer>
+        ) : (
+          <>
+            <Header>
+              <UserContainer>
+                <UserInfo>
+                  <UserPhoto
+                    source={{ uri: 'https://github.com/marcel099.png' }}
+                  />
+                  <UserGreeting>
+                    <Greeting>Olá,</Greeting>
+                    <UserName>Marcelo</UserName>
+                  </UserGreeting>
+                </UserInfo>
+                <Icon name="power" />
+              </UserContainer>
 
 
-      </Header>
+            </Header>
 
-      <HighlightCards>
-        <HighlightCard
-          type="deposit"
-          title="Entradas"
-          amount="R$ 17.400,00"
-          lastTransaction="Última entrada dia 13 de abril"
-        />
-        <HighlightCard
-          type="withdraw"
-          title="Saídas"
-          amount="R$ 1.259,00"
-          lastTransaction="Última entrada dia 03 de abril"
-        />
-        <HighlightCard
-          type="total"
-          title="Total"
-          amount="R$ 16.141,00"
-          lastTransaction="01 à 16 de abril"
-        />
-      </HighlightCards>
+            <HighlightCards>
+              <HighlightCard
+                type="deposit"
+                title="Entradas"
+                amount={highlightData?.profits.formattedAmount ?? ''}
+                lastTransaction={highlightData?.profits.message ?? ''}
+              />
+              <HighlightCard
+                type="withdraw"
+                title="Saídas"
+                amount={highlightData?.expenses.formattedAmount ?? ''}
+                lastTransaction={highlightData?.expenses.message ?? ''}
+              />
+              <HighlightCard
+                type="total"
+                title="Total"
+                amount={highlightData?.total.formattedAmount ?? ''}
+                lastTransaction={highlightData?.total.message ?? ''}
+              />
+            </HighlightCards>
 
-      <TransactionsContainer>
-        <Title>Listagem</Title>
-        <Transactions
-          data={transactions}
-          renderItem={({ item }) => <TransactionCard data={item} />}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: getBottomSpace() + 16,
-          }}
-          ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-        />
-      </TransactionsContainer>
+            <TransactionsContainer>
+              <Title>Listagem</Title>
+              <Transactions
+                data={transactions}
+                renderItem={({ item }) => <TransactionCard data={item} />}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                  paddingBottom: getBottomSpace() + 16,
+                }}
+                ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+              />
+            </TransactionsContainer>
+          </>
+        )
+      }
     </Container>
   );
 }
