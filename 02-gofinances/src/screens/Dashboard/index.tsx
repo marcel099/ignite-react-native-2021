@@ -210,8 +210,6 @@ export function Dashboard() {
                 </UserInfo>
                 <Icon name="power" />
               </UserContainer>
-
-
             </Header>
 
             <HighlightCards>

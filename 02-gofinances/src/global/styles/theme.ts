@@ -10,10 +10,10 @@ export const theme = {
     danger: 'rgb(232, 63, 88)',
     lightDanger: 'rgba(232, 63, 88, 0.5)',
 
-    shape: '#fff',
+    shape: '#ffffff',
     title: '#363f5f',
     text: '#9696b2',
-    darkText: '#000',
+    darkText: '#000000',
     background: '#f0f2f5',
   },
   fonts: {

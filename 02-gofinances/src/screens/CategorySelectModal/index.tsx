@@ -6,14 +6,13 @@ import { categories } from "../../global/utils/categories";
 
 import {
   Container,
-  Header,
-  Title,
   CategoryItem,
   Icon,
   Name,
   Separator,
   Footer,
 } from "./styles";
+import { AppScreenHeader } from "../../components/AppScreenHeader";
 
 interface Props {
   selectedCategory: CategoryDTO | null;
@@ -28,9 +27,7 @@ export function CategorySelectModal({
 }: Props) {
   return (
     <Container>
-      <Header>
-        <Title>Categoria</Title>
-      </Header>
+      <AppScreenHeader title="Categoria" />
 
       <FlatList
         data={categories}

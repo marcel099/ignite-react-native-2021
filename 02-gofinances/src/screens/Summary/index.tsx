@@ -5,8 +5,10 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useTheme } from "styled-components";
 import { VictoryPie } from "victory-native";
 import { RFValue } from "react-native-responsive-fontsize";
+import { subMonths, addMonths, format } from 'date-fns';
+import { ptBR } from 'date-fns/locale'
 
-import { BaseScreen } from "../../components/BaseScreen";
+import { AppScreenHeader } from "../../components/AppScreenHeader";
 import { HistoryCard } from "../../components/HistoryCard";
 import { AppLoader } from "../../components/AppLoader";
 import { TRANSACTIONS_COLLECTION } from "../../global/configs/storage";
@@ -15,9 +17,15 @@ import { formatNumberToCurrency } from "../../global/utils/formatters";
 import { Transaction } from "../Dashboard";
 
 import {
+  Container,
   Content,
   ChartContainer,
+  MonthSelect,
+  MonthSelectButton,
+  MonthSelectIcon,
+  MonthName,
 } from "./styles";
+import { ScrollView } from "react-native";
 
 interface CategoryWithTotal {
   id: string;
@@ -32,6 +40,7 @@ export function Summary() {
   const theme = useTheme();
   const bottomTabBarHeight = useBottomTabBarHeight();
 
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
   const [categoriesWithTotal, setCategoriesWithTotal] = useState<CategoryWithTotal[]>([]);
 
@@ -47,7 +56,17 @@ export function Summary() {
 
       const loadedTransactions = JSON.parse(data) as Transaction[];
       const expenseTransactions = loadedTransactions
-        .filter(transaction => transaction.type === 'withdraw');
+        .filter(transaction => transaction.type === 'withdraw')
+        .filter(transaction => {
+          let date = new Date(transaction.date);
+
+          if (date.getFullYear() === selectedDate.getFullYear()
+           && date.getMonth() === selectedDate.getMonth()) {
+            return true;
+          } else {
+            return false;
+          }
+        });
 
       const expenseTotal = expenseTransactions
         .reduce<number>((total, transaction) => {
@@ -97,23 +116,50 @@ export function Summary() {
 
   useFocusEffect(useCallback(() => {
     loadTransactions();
-  }, []));
+  }, [selectedDate]));
+
+  function handleDateChange(action: 'previous' | 'next') {
+    if (action === 'next') {
+      setSelectedDate(addMonths(selectedDate, 1));
+    } else {
+      setSelectedDate(subMonths(selectedDate, 1));
+    }
+  }
 
   return (
-    <BaseScreen title="Resumo por categoria">
+    <Container showsVerticalScrollIndicator={false}>
+      <AppScreenHeader title="Resumo por categoria" />
       {
         isLoadingTransactions
         ? (
           <AppLoader />
         ) : (
           <Content
-            showVerticalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={{
               flex: 1,
-              paddingHorizontal: 24,
-              paddingBottom: bottomTabBarHeight,
+              paddingHorizontal: RFValue(24),
+              marginBottom: RFValue(bottomTabBarHeight),
             }}
           >
+            <MonthSelect>
+              <MonthSelectButton
+                onPress={() => handleDateChange('previous')}
+              >
+                <MonthSelectIcon name="chevron-left" />
+              </MonthSelectButton>
+              
+              <MonthName>
+                {format(selectedDate, 'MMMM, yyyy', { locale: ptBR })}
+              </MonthName>
+
+              <MonthSelectButton
+                onPress={() => handleDateChange('next')}
+              >
+                <MonthSelectIcon name="chevron-right" />
+              </MonthSelectButton>
+            </MonthSelect>
+
             <ChartContainer>
               <VictoryPie
                 data={categoriesWithTotal}
@@ -124,7 +170,7 @@ export function Summary() {
                   labels: {
                     fontSize: RFValue(18),
                     fontWeight: 'bold',
-                    color: theme.colors.shape,
+                    fill: theme.colors.shape,
                   }
                 }}
                 labelRadius={80}
@@ -143,6 +189,6 @@ export function Summary() {
           </Content>
         )
       }
-    </BaseScreen>
+    </Container>
   );
 }

@@ -14,7 +14,7 @@ import uuid from "react-native-uuid";
 
 import { TRANSACTIONS_COLLECTION } from "../../global/configs/storage";
 import { AppBottomTabParamList } from "../../routes/app.routes";
-import { BaseScreen } from "../../components/BaseScreen";
+import { AppScreenHeader } from "../../components/AppScreenHeader";
 import { Button } from "../../components/form/Button";
 import { CategorySelectButton } from "../../components/form/CategorySelectButton";
 import { InputRHF } from "../../components/form/InputRHF";
@@ -23,6 +23,7 @@ import { Transaction } from "../Dashboard";
 import { CategorySelectModal } from "../CategorySelectModal";
 
 import {
+  Container,
   Form,
   Fields,
   TransactionTypeContainer,
@@ -144,57 +145,60 @@ export function Register() {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <BaseScreen title="Cadastro">
-        <Form>
-          <Fields>
-            <InputRHF
-              name="title"
-              control={control}
-              placeholder="Título"
-              autoCapitalize="sentences"
-              autoCorrect={false}
-              error={errors.title?.message}
-            />
-            <InputRHF
-              name="amount"
-              control={control}
-              placeholder="Preço"
-              keyboardType="number-pad"
-              error={errors.amount?.message}
-            />
-            <TransactionTypeContainer>
-              <TransactionTypeButton
-                title="Entrada"
-                type="deposit"
-                onPress={() => handleTransactionTypeSelect('deposit')}
-                isActive={selectedTransactionType === 'deposit'}
+    <>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <Container>
+          <AppScreenHeader title="Cadastro" />
+          <Form>
+            <Fields>
+              <InputRHF
+                name="title"
+                control={control}
+                placeholder="Título"
+                autoCapitalize="sentences"
+                autoCorrect={false}
+                error={errors.title?.message}
               />
-              <TransactionTypeButton
-                title="Saída"
-                type="withdraw"
-                onPress={() => handleTransactionTypeSelect('withdraw')}
-                isActive={selectedTransactionType === 'withdraw'}
+              <InputRHF
+                name="amount"
+                control={control}
+                placeholder="Preço"
+                keyboardType="number-pad"
+                error={errors.amount?.message}
               />
-            </TransactionTypeContainer>
-            <CategorySelectButton
-              name={selectedCategory?.name ?? 'Categoria'}
-              onPress={handleOpenCategorySelectModal}
+              <TransactionTypeContainer>
+                <TransactionTypeButton
+                  title="Entrada"
+                  type="deposit"
+                  onPress={() => handleTransactionTypeSelect('deposit')}
+                  isActive={selectedTransactionType === 'deposit'}
+                />
+                <TransactionTypeButton
+                  title="Saída"
+                  type="withdraw"
+                  onPress={() => handleTransactionTypeSelect('withdraw')}
+                  isActive={selectedTransactionType === 'withdraw'}
+                />
+              </TransactionTypeContainer>
+              <CategorySelectButton
+                name={selectedCategory?.name ?? 'Categoria'}
+                onPress={handleOpenCategorySelectModal}
+              />
+            </Fields>
+            <Button
+              title="Enviar"
+              onPress={handleSubmit(handleRegisterTransaction)}
             />
-          </Fields>
-          <Button
-            title="Enviar"
-            onPress={handleSubmit(handleRegisterTransaction)}
-          />
-        </Form>
-        <Modal visible={isCategoryModalOpen}>
-          <CategorySelectModal
-            selectedCategory={selectedCategory}
-            setSelectedCategory={setSelectedCategory}
-            closeCategorySelectModal={handleCloseCategorySelectModal}
-          />
-        </Modal>
-      </BaseScreen>
-    </TouchableWithoutFeedback>
+          </Form>
+        </Container>
+      </TouchableWithoutFeedback>
+      <Modal visible={isCategoryModalOpen}>
+        <CategorySelectModal
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          closeCategorySelectModal={handleCloseCategorySelectModal}
+        />
+      </Modal>
+    </>
   );
 }

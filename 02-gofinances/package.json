@@ -16,6 +16,7 @@
     "@react-navigation/native": "^6.0.11",
     "@types/react": "~18.0.0",
     "@types/react-native": "~0.69.1",
+    "date-fns": "^2.29.2",
     "expo": "~46.0.6",
     "expo-font": "~10.2.0",
     "expo-splash-screen": "~0.16.1",
