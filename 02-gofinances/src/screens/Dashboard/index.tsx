@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +7,7 @@ import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard } from '../../components/TransactionCard';
+import { AppLoader } from '../../components/AppLoader';
 import {
   formatDateToLocaleDate,
   formatDateToLongDate,
@@ -28,7 +29,6 @@ import {
   TransactionsContainer,
   Title,
   Transactions,
-  LoadContainer,
 } from './styles';
 
 export type TransactionType = 'deposit' | 'withdraw';
@@ -192,14 +192,9 @@ export function Dashboard() {
   return (
     <Container>
       {
-      isLoadingTransactions
+        isLoadingTransactions
         ? (
-          <LoadContainer>
-            <ActivityIndicator
-              color={theme.colors.primary}
-              size="large"
-            />
-          </LoadContainer>
+          <AppLoader />
         ) : (
           <>
             <Header>
