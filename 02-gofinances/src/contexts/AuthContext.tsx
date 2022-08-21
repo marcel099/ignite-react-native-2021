@@ -17,7 +17,7 @@ interface AuthContextProps {
   user: User | null;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
-  isLoadingSignedInUser: boolean;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -35,7 +35,6 @@ interface AuthContextProviderProps {
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [signedInUser, setSignedInUser] = useState<User | null>(null);
-  const [isLoadingSignedInUser, setIsLoadingSignedInUser] = useState(true);
 
   useEffect(() => {
     async function loadUserSignedInUser() {
@@ -46,8 +45,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         let loadedUser = JSON.parse(data) as User;
         setSignedInUser(loadedUser);
       }
-
-      setIsLoadingSignedInUser(false);
     }
 
     loadUserSignedInUser();
@@ -108,10 +105,15 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       });
 
       if (credential) {
+        const name = String(credential.fullName?.givenName ?? '');
+        const picture =
+          `https://ui-avatars.com/api/?name=${name}&length=1`;
+
         const signedInUser: User = {
           id: String(credential.user),
           email: credential.email!,
-          name: String(credential.fullName?.givenName ?? ''),
+          name,
+          picture,
         }
 
         saveSignedInUser(signedInUser);
@@ -121,12 +123,18 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
+
+  async function signOut() {
+    setSignedInUser(null);
+    AsyncStorage.removeItem(SIGNED_IN_USER_COLLECTION);
+  }
+
   return (
     <AuthContext.Provider value={{
       user: signedInUser,
       signInWithGoogle,
       signInWithApple,
-      isLoadingSignedInUser,
+      signOut,
     }}>
       {children}
     </AuthContext.Provider>

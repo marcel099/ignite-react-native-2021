@@ -1,13 +1,13 @@
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from 'styled-components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard } from '../../components/TransactionCard';
 import { AppLoader } from '../../components/AppLoader';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   formatDateToLocaleDate,
   formatDateToLongDate,
@@ -24,6 +24,7 @@ import {
   UserGreeting,
   Greeting,
   UserName,
+  LogoutButton,
   Icon,
   HighlightCards,
   TransactionsContainer,
@@ -54,7 +55,7 @@ interface HighlightsData {
 }
 
 export function Dashboard() {
-  const theme = useTheme();
+  const { signOut, user } = useAuth();
 
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -201,14 +202,16 @@ export function Dashboard() {
               <UserContainer>
                 <UserInfo>
                   <UserPhoto
-                    source={{ uri: 'https://github.com/marcel099.png' }}
+                    source={{ uri: user?.picture }}
                   />
                   <UserGreeting>
                     <Greeting>Olá,</Greeting>
-                    <UserName>Marcelo</UserName>
+                    <UserName>{user?.name ?? ''}</UserName>
                   </UserGreeting>
                 </UserInfo>
-                <Icon name="power" />
+                <LogoutButton onPress={signOut}>
+                  <Icon name="power" />
+                </LogoutButton>
               </UserContainer>
             </Header>
 
