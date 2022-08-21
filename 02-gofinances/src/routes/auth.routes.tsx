@@ -13,11 +13,10 @@ export type AppBottomTabParamList = {
   Resumo: undefined;
 };
 
-
 const { Navigator, Screen } =
   createBottomTabNavigator<AppBottomTabParamList>();
 
-export function AppRoutes() {
+export function AuthRoutes() {
   const theme = useTheme();
 
   return (

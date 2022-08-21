@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode, useState } from 'react';
+import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as AuthSession from 'expo-auth-session';
 import * as AppleAuthentication from 'expo-apple-authentication';
@@ -17,6 +17,7 @@ interface AuthContextProps {
   user: User | null;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
+  isLoadingSignedInUser: boolean;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -34,6 +35,23 @@ interface AuthContextProviderProps {
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [signedInUser, setSignedInUser] = useState<User | null>(null);
+  const [isLoadingSignedInUser, setIsLoadingSignedInUser] = useState(true);
+
+  useEffect(() => {
+    async function loadUserSignedInUser() {
+      const data = 
+        await AsyncStorage.getItem(SIGNED_IN_USER_COLLECTION);
+
+      if (data !== null) {  
+        let loadedUser = JSON.parse(data) as User;
+        setSignedInUser(loadedUser);
+      }
+
+      setIsLoadingSignedInUser(false);
+    }
+
+    loadUserSignedInUser();
+  }, []);
 
   async function saveSignedInUser(user: User) {
     setSignedInUser(user);
@@ -108,6 +126,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       user: signedInUser,
       signInWithGoogle,
       signInWithApple,
+      isLoadingSignedInUser,
     }}>
       {children}
     </AuthContext.Provider>

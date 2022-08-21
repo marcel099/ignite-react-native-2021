@@ -3,7 +3,6 @@ import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 import { StatusBar } from 'react-native';
 import { ThemeProvider } from 'styled-components';
-import { NavigationContainer} from "@react-navigation/native";
 import { useFonts } from 'expo-font';
 import {
   Poppins_400Regular,
@@ -11,10 +10,9 @@ import {
   Poppins_700Bold,
 } from '@expo-google-fonts/poppins';
 
-import { theme } from './src/global/styles/theme';
-import { AppRoutes } from './src/routes/app.routes';
-import { SignIn } from './src/screens/SignIn';
 import { AuthContextProvider } from './src/contexts/AuthContext';
+import { theme } from './src/global/styles/theme';
+import { AppRoutes } from "./src/routes";
 
 
 export default function App() {
@@ -35,10 +33,7 @@ export default function App() {
       />
       <ThemeProvider theme={theme}>
         <AuthContextProvider>
-          <NavigationContainer>
-            {/* <AppRoutes /> */}
-            <SignIn />
-          </NavigationContainer>
+          <AppRoutes />
         </AuthContextProvider>
       </ThemeProvider>
     </>
