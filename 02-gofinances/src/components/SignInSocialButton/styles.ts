@@ -1,7 +1,7 @@
 import { RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
 
-export const Button = styled.View`
+export const Button = styled.TouchableOpacity`
   align-items: center;
   flex-direction: row;
 

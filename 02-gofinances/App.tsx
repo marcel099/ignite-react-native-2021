@@ -13,8 +13,9 @@ import {
 
 import { theme } from './src/global/styles/theme';
 import { AppRoutes } from './src/routes/app.routes';
-
 import { SignIn } from './src/screens/SignIn';
+import { AuthContextProvider } from './src/contexts/AuthContext';
+
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -33,10 +34,12 @@ export default function App() {
         barStyle="light-content"
       />
       <ThemeProvider theme={theme}>
-        <NavigationContainer>
-          {/* <AppRoutes /> */}
-          <SignIn />
-        </NavigationContainer>
+        <AuthContextProvider>
+          <NavigationContainer>
+            {/* <AppRoutes /> */}
+            <SignIn />
+          </NavigationContainer>
+        </AuthContextProvider>
       </ThemeProvider>
     </>
   );
