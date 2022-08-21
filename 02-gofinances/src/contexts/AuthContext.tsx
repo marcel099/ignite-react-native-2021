@@ -1,7 +1,10 @@
 import { createContext, useContext, ReactNode, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as AuthSession from 'expo-auth-session';
+import * as AppleAuthentication from 'expo-apple-authentication';
 
 import { googleOAuth } from '../global/configs/googleOAuth';
+import { SIGNED_IN_USER_COLLECTION } from '../global/configs/storage';
 
 interface User {
   id: string;
@@ -13,6 +16,7 @@ interface User {
 interface AuthContextProps {
   user: User | null;
   signInWithGoogle: () => Promise<void>;
+  signInWithApple: () => Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextProps);
@@ -30,6 +34,11 @@ interface AuthContextProviderProps {
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [signedInUser, setSignedInUser] = useState<User | null>(null);
+
+  async function saveSignedInUser(user: User) {
+    setSignedInUser(user);
+    AsyncStorage.setItem(SIGNED_IN_USER_COLLECTION, JSON.stringify(user));
+  }
 
   async function signInWithGoogle() {
     try {
@@ -56,14 +65,39 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
         const userInfo = await response.json();
 
-        setSignedInUser({
+        const signedInUser: User = {
           id: userInfo.id,
           email: userInfo.email,
           name: userInfo.name,
           picture: userInfo.picture,
-        });
+        };
+
+        saveSignedInUser(signedInUser);
       }
             
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function signInWithApple() {
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ]
+      });
+
+      if (credential) {
+        const signedInUser: User = {
+          id: String(credential.user),
+          email: credential.email!,
+          name: String(credential.fullName?.givenName ?? ''),
+        }
+
+        saveSignedInUser(signedInUser);
+      }
     } catch (error) {
       throw error;
     }
@@ -73,6 +107,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     <AuthContext.Provider value={{
       user: signedInUser,
       signInWithGoogle,
+      signInWithApple,
     }}>
       {children}
     </AuthContext.Provider>
