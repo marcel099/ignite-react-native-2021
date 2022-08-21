@@ -12,8 +12,8 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import uuid from "react-native-uuid";
 
-import { TRANSACTIONS_COLLECTION } from "../../global/configs/storage";
-import { AppBottomTabParamList } from "../../routes/app.routes";
+import { useTransactions } from '../../contexts/TransactionsContext';
+import { AppBottomTabParamList } from "../../routes/auth.routes";
 import { AppScreenHeader } from "../../components/AppScreenHeader";
 import { Button } from "../../components/form/Button";
 import { CategorySelectButton } from "../../components/form/CategorySelectButton";
@@ -59,6 +59,7 @@ type RegisterScreenProp =
 
 export function Register() {
   const navigation = useNavigation<RegisterScreenProp>();
+  const { USER_TRANSACTIONS_COLLECTION } = useTransactions();
 
   const {
     control,
@@ -119,8 +120,17 @@ export function Register() {
     };
 
     try {
+      if (USER_TRANSACTIONS_COLLECTION === null) {
+        Alert.alert(
+          "Erro ao salvar",
+          "Não foi possível salvar a transação."
+        );
+
+        return;
+      }
+
       const data = 
-        await AsyncStorage.getItem(TRANSACTIONS_COLLECTION);
+        await AsyncStorage.getItem(USER_TRANSACTIONS_COLLECTION);
 
       let currentTransactions = JSON.parse(data!);
 
@@ -131,7 +141,7 @@ export function Register() {
       }
 
       await AsyncStorage.setItem(
-        TRANSACTIONS_COLLECTION,
+        USER_TRANSACTIONS_COLLECTION,
         JSON.stringify(currentTransactions)
       );
 

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
@@ -8,12 +8,12 @@ import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard } from '../../components/TransactionCard';
 import { AppLoader } from '../../components/AppLoader';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTransactions } from '../../contexts/TransactionsContext';
 import {
   formatDateToLocaleDate,
   formatDateToLongDate,
   formatNumberToCurrency
 } from '../../global/utils/formatters';
-import { TRANSACTIONS_COLLECTION } from '../../global/configs/storage';
 
 import {
   Container,
@@ -56,6 +56,7 @@ interface HighlightsData {
 
 export function Dashboard() {
   const { signOut, user } = useAuth();
+  const { USER_TRANSACTIONS_COLLECTION } = useTransactions();
 
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -74,10 +75,10 @@ export function Dashboard() {
       const lastTransactionDate =
         Math.max.apply(Math, transactionsDateInTimestamp);
 
-      const formattedLastExpenseTransactionDate =
+      const formattedLastTransactionDate =
         formatDateToLongDate(lastTransactionDate);
 
-      return formattedLastExpenseTransactionDate;
+      return formattedLastTransactionDate;
     } catch(err) {
       console.log(err);
       return '';
@@ -118,9 +119,20 @@ export function Dashboard() {
       setIsLoadingTransactions(true);
     }
 
-    const data = 
-      await AsyncStorage.getItem(TRANSACTIONS_COLLECTION);
+    if (USER_TRANSACTIONS_COLLECTION === null) {
+      setIsLoadingTransactions(false);
+      Alert.alert(
+        "Erro no carregamento",
+        "A lista de transações não pôde ser obtida."
+      );
+      
+      return;
+    }
 
+    
+    const data = 
+    await AsyncStorage.getItem(USER_TRANSACTIONS_COLLECTION);
+    
     if (data !== null) {
       let profitsAmount = 0;
       let expensesAmount = 0;
@@ -182,8 +194,9 @@ export function Dashboard() {
           message: transactionsIntervalMessage,
         }
       });
-      setIsLoadingTransactions(false);
     }
+  
+    setIsLoadingTransactions(false);
   }
 
   useFocusEffect(useCallback(() => {

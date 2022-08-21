@@ -13,6 +13,7 @@ import {
 } from '@expo-google-fonts/poppins';
 
 import { AuthContextProvider } from './src/contexts/AuthContext';
+import { TransactionsContextProvider } from './src/contexts/TransactionsContext';
 import { theme } from './src/global/styles/theme';
 import { AppRoutes } from "./src/routes";
 
@@ -41,6 +42,8 @@ export default function App() {
     }
   }, [fontsLoaded]);
 
+  console.log(fontsLoaded);
+
   if (!fontsLoaded) {
     return null;
   }
@@ -52,7 +55,9 @@ export default function App() {
       />
       <ThemeProvider theme={theme}>
         <AuthContextProvider>
-          <AppRoutes />
+          <TransactionsContextProvider>
+            <AppRoutes />
+          </TransactionsContextProvider>
         </AuthContextProvider>
       </ThemeProvider>
     </>

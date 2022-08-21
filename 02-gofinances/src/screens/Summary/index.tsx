@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -11,7 +12,7 @@ import { ptBR } from 'date-fns/locale'
 import { AppScreenHeader } from "../../components/AppScreenHeader";
 import { HistoryCard } from "../../components/HistoryCard";
 import { AppLoader } from "../../components/AppLoader";
-import { TRANSACTIONS_COLLECTION } from "../../global/configs/storage";
+import { useTransactions } from '../../contexts/TransactionsContext';
 import { categories } from "../../global/utils/categories";
 import { formatNumberToCurrency } from "../../global/utils/formatters";
 import { Transaction } from "../Dashboard";
@@ -25,7 +26,6 @@ import {
   MonthSelectIcon,
   MonthName,
 } from "./styles";
-import { ScrollView } from "react-native";
 
 interface CategoryWithTotal {
   id: string;
@@ -39,6 +39,7 @@ interface CategoryWithTotal {
 export function Summary() {
   const theme = useTheme();
   const bottomTabBarHeight = useBottomTabBarHeight();
+  const { USER_TRANSACTIONS_COLLECTION } = useTransactions();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(true);
@@ -49,8 +50,18 @@ export function Summary() {
       setIsLoadingTransactions(true);
     }
 
+    if (USER_TRANSACTIONS_COLLECTION === null) {
+      setIsLoadingTransactions(false);
+      Alert.alert(
+        "Erro no carregamento",
+        "A lista de transações não pôde ser obtida."
+      );
+      
+      return;
+    }
+
     const data = 
-      await AsyncStorage.getItem(TRANSACTIONS_COLLECTION);
+      await AsyncStorage.getItem(USER_TRANSACTIONS_COLLECTION);
 
     if (data !== null) {
 
@@ -110,8 +121,9 @@ export function Summary() {
         }, []);
 
       setCategoriesWithTotal(categoriesWithTotal);
-      setIsLoadingTransactions(false);
     }
+
+    setIsLoadingTransactions(false);
   }
 
   useFocusEffect(useCallback(() => {
