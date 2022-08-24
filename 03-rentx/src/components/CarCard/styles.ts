@@ -59,6 +59,6 @@ export const Type = styled.View``;
 
 export const CarImage = styled.Image`
   width: ${RFValue(167)}px;
-  width: ${RFValue(85)}px;
+  height: ${RFValue(85)}px;
 `;
 

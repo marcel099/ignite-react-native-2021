@@ -1,4 +1,4 @@
-import { StatusBar } from "react-native";
+import { FlatList, StatusBar } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 
 import LogoSvg from '../../assets/logo.svg';
@@ -22,15 +22,17 @@ export interface Car {
 }
 
 export function Home() {
-  const car: Car = {
-    brand_name: 'Audi',
-    car_name: 'RS 5  Coupé',
-    car_thumbnail_url: 'https://w7.pngwing.com/pngs/174/445/png-transparent-audi-car-audi-a4-cars.png',
-    rent: {
-      period: 'Ao dia',
-      price: 120,
-    }
-  }
+  const cars: Car[] = [
+    {
+      brand_name: 'Audi',
+      car_name: 'RS 5  Coupé',
+      car_thumbnail_url: 'https://w7.pngwing.com/pngs/174/445/png-transparent-audi-car-audi-a4-cars.png',
+      rent: {
+        period: 'Ao dia',
+        price: 120,
+      }
+    },
+  ];
 
   return (
     <>
@@ -52,7 +54,19 @@ export function Home() {
           </HeaderContent>
         </Header>
 
-        <CarCard data={car} />
+        <FlatList
+          data={cars}
+          keyExtractor={(item) => item.car_name}
+          renderItem={({ item }) => (
+            <CarCard
+              data={item}
+            />
+          )}
+          contentContainerStyle={{
+            padding: 24,
+          }}
+          showsVerticalScrollIndicator={false}
+        />
       </Container>
     </>
   );
