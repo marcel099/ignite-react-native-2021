@@ -1,8 +1,11 @@
 import { FlatList, StatusBar } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { RFValue } from "react-native-responsive-fontsize";
 
 import LogoSvg from '../../assets/logo.svg';
 import { CarCard } from "../../components/CarCard";
+import { AppStackParamList } from "../../routes/stack.routes";
 
 import {
   Container,
@@ -21,7 +24,11 @@ export interface Car {
   }
 }
 
+type HomeScreenProp = StackNavigationProp<AppStackParamList, 'Home'>;
+
 export function Home() {
+  const navigation = useNavigation<HomeScreenProp>();
+
   const cars: Car[] = [
     {
       brand_name: 'Audi',
@@ -33,6 +40,10 @@ export function Home() {
       }
     },
   ];
+
+  function handleShowCarDetails() {
+    navigation.navigate('CarDetails');
+  }
 
   return (
     <>
@@ -60,6 +71,7 @@ export function Home() {
           renderItem={({ item }) => (
             <CarCard
               data={item}
+              onPress={handleShowCarDetails}
             />
           )}
           contentContainerStyle={{

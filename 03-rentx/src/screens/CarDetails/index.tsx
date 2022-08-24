@@ -1,3 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+
 import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
 import { Button } from "../../components/Button";
@@ -9,6 +12,8 @@ import ForceSvg from '../../assets/force.svg';
 import GasolineSvg from '../../assets/gasoline.svg';
 import ExchangeSvg from '../../assets/exchange.svg';
 import PeopleSvg from '../../assets/people.svg';
+
+import { AppStackParamList } from "../../routes/stack.routes";
 
 import {
   Container,
@@ -27,11 +32,25 @@ import {
   Footer,
 } from "./styles";
 
+type CarDetailsScreenProp = StackNavigationProp<AppStackParamList, 'CarDetails'>;
+
 export function CarDetails() {
+  const navigation = useNavigation<CarDetailsScreenProp>();
+
+  function handleGoBackHome() {
+    navigation.pop();
+  }
+
+  function handleShowScheduling() {
+    navigation.navigate('Scheduling');
+  }
+
   return (
     <Container>
       <Header>
-        <BackButton onPress={() => console.log('oi')} />
+        <BackButton
+          onPress={handleGoBackHome}
+        />
       </Header> 
 
       <CarImages>
@@ -67,7 +86,10 @@ export function CarDetails() {
       </Content>
 
       <Footer>
-        <Button title="Confirmar" />
+        <Button
+          title="Escolher período de aluguel"
+          onPress={handleShowScheduling}
+        />
       </Footer>
     </Container>
   );

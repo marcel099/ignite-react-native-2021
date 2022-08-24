@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { RFValue } from "react-native-responsive-fontsize";
 import { useTheme } from "styled-components";
 import { Feather } from "@expo/vector-icons";
@@ -13,6 +15,8 @@ import ForceSvg from '../../assets/force.svg';
 import GasolineSvg from '../../assets/gasoline.svg';
 import ExchangeSvg from '../../assets/exchange.svg';
 import PeopleSvg from '../../assets/people.svg';
+
+import { AppStackParamList } from "../../routes/stack.routes";
 
 import {
   Container,
@@ -40,13 +44,26 @@ import {
   Footer,
 } from "./styles";
 
-export function ScheduleDetails() {
+type SchedulingDetailsScreenProp = StackNavigationProp<AppStackParamList, 'SchedulingDetails'>;
+
+export function SchedulingDetails() {
+  const navigation = useNavigation<SchedulingDetailsScreenProp>();
   const theme = useTheme();
+
+  function handleGoBackScheduling() {
+    navigation.pop();
+  }
+
+  function handleShowScheduleCompleted() {
+    navigation.navigate('ScheduleCompleted');
+  }
 
   return (
     <Container>
       <Header>
-        <BackButton onPress={() => console.log('oi')} />
+        <BackButton
+          onPress={handleGoBackScheduling}
+        />
       </Header> 
 
       <CarImages>
@@ -112,7 +129,11 @@ export function ScheduleDetails() {
       </Content>
 
       <Footer>
-        <Button title="Confirmar" />
+        <Button
+          title="Alugar agora"
+          color={theme.colors.success}
+          onPress={handleShowScheduleCompleted}
+        />
       </Footer>
     </Container>
   );
