@@ -11,7 +11,7 @@ import {
 import { ThemeProvider } from "styled-components/native";
 
 import { theme } from "./src/global/styles/theme"
-import { CarDetails } from "./src/screens/CarDetails";
+import { Scheduling } from "./src/screens/Scheduling";
 
 export function App() {
   const [fontsLoaded] = useFonts({
@@ -28,7 +28,7 @@ export function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CarDetails />
+      <Scheduling />
     </ThemeProvider>
   );
 }
