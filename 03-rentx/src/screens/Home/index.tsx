@@ -1,10 +1,14 @@
-import { FlatList, StatusBar } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, FlatList, StatusBar } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RFValue } from "react-native-responsive-fontsize";
 
 import LogoSvg from '../../assets/logo.svg';
+import { CarDTO } from "../../dtos/CarDTO";
 import { CarCard } from "../../components/CarCard";
+import { AppLoader } from "../../components/AppLoader";
+import { api } from "../../services/api";
 import { AppStackParamList } from "../../routes/stack.routes";
 
 import {
@@ -14,32 +18,30 @@ import {
   TotalCars,
 } from "./styles";
 
-export interface Car {
-  brand_name: string;
-  car_name: string;
-  car_thumbnail_url: string;
-  rent: {
-    period: string;
-    price: number;
-  }
-}
-
 type HomeScreenProp = StackNavigationProp<AppStackParamList, 'Home'>;
 
 export function Home() {
   const navigation = useNavigation<HomeScreenProp>();
 
-  const cars: Car[] = [
-    {
-      brand_name: 'Audi',
-      car_name: 'RS 5  Coupé',
-      car_thumbnail_url: 'https://w7.pngwing.com/pngs/174/445/png-transparent-audi-car-audi-a4-cars.png',
-      rent: {
-        period: 'Ao dia',
-        price: 120,
+  const [cars, setCars] = useState<CarDTO[]>([]);
+  const [isFetchingCars, setIsFetchingCars] = useState(true);
+
+  useEffect(() => {
+    async function fetchCars() {
+      try {
+        const response = await api.get('/cars');
+
+        setCars(response.data);
+      } catch(err) {
+        console.log(err);
+        Alert.alert("Erro inesperado ao buscar carros")
+      } finally {
+        setIsFetchingCars(false);
       }
-    },
-  ];
+    }
+
+    fetchCars()
+  }, []);
 
   function handleShowCarDetails() {
     navigation.navigate('CarDetails');
@@ -65,20 +67,26 @@ export function Home() {
           </HeaderContent>
         </Header>
 
-        <FlatList
-          data={cars}
-          keyExtractor={(item) => item.car_name}
-          renderItem={({ item }) => (
-            <CarCard
-              data={item}
-              onPress={handleShowCarDetails}
+        {
+          isFetchingCars ? (
+            <AppLoader />
+          ) : (
+            <FlatList
+              data={cars}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <CarCard
+                  data={item}
+                  onPress={handleShowCarDetails}
+                />
+              )}
+              contentContainerStyle={{
+                padding: 24,
+              }}
+              showsVerticalScrollIndicator={false}
             />
-          )}
-          contentContainerStyle={{
-            padding: 24,
-          }}
-          showsVerticalScrollIndicator={false}
-        />
+          )
+        }
       </Container>
     </>
   );

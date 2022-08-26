@@ -1,6 +1,6 @@
 import { TouchableOpacityProps } from 'react-native';
 import GasolineSvg from '../../assets/gasoline.svg'
-import { Car } from "../../screens/Home";
+import { CarDTO } from '../../dtos/CarDTO';
 
 import {
   Container,
@@ -16,14 +16,14 @@ import {
 } from "./styles";
 
 interface Props extends TouchableOpacityProps {
-  data: Car;
+  data: CarDTO;
 }
 
 export function CarCard({
   data: {
-    brand_name,
-    car_name,
-    car_thumbnail_url,
+    brand,
+    name,
+    thumbnail,
     rent: {
       period,
       price,
@@ -34,8 +34,8 @@ export function CarCard({
   return (
     <Container {...rest}>
       <Details>
-        <Brand>{brand_name}</Brand>
-        <Name>{car_name}</Name>
+        <Brand>{brand}</Brand>
+        <Name>{name}</Name>
 
         <About>
           <Rent>
@@ -50,7 +50,7 @@ export function CarCard({
       </Details>
 
       <CarImage
-        source={{ uri: car_thumbnail_url }}
+        source={{ uri: thumbnail }}
         resizeMode="contain"
       />
     </Container>
