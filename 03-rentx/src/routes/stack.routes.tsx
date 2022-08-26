@@ -7,6 +7,7 @@ import { CarDetails } from "../screens/CarDetails";
 import { Scheduling } from "../screens/Scheduling";
 import { SchedulingDetails } from "../screens/SchedulingDetails";
 import { ScheduleCompleted } from "../screens/ScheduleCompleted";
+import { MyCars } from "../screens/MyCars";
 
 import { CarDTO } from "../global/dtos/CarDTO";
 
@@ -23,6 +24,7 @@ export type AppStackParamList = {
     dates: string[];
   };
   ScheduleCompleted: undefined;
+  MyCars: undefined;
 }
 
 const { Navigator, Screen } = createStackNavigator<AppStackParamList>();
@@ -53,6 +55,10 @@ export function StackRoutes() {
       <Screen
         name="ScheduleCompleted"
         component={ScheduleCompleted}
+      />
+      <Screen
+        name="MyCars"
+        component={MyCars}
       />
     </Navigator>
   )

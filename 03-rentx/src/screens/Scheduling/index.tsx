@@ -100,36 +100,6 @@ export function Scheduling() {
     });
   }
 
-  // const formattedRentalPeriod = useMemo(
-  //   () => {
-  //     if (markedDates === null || Object.keys(markedDates).length === 0) {
-  //       return {
-  //         formattedStart: '',
-  //         formattedEnd: '',
-  //       }
-  //     }
-
-  //     const formattedRentalPeriodArray = Object.keys(markedDates)
-  //       .filter((date, idx, arr) => [0, arr.length - 1].includes(idx))
-  //       .map(date => format(
-  //         getPlatformDate(new Date(date)), 'dd/MM/yyyy'
-  //       ));
-      
-  //     const formattedStart =
-  //       formattedRentalPeriodArray[0];
-  //     const formattedEnd =
-  //       formattedRentalPeriodArray[1] ?? formattedRentalPeriodArray[0];
-
-  //     const formattedRentalPeriod = {
-  //       formattedStart,
-  //       formattedEnd,
-  //     }
-
-  //     return formattedRentalPeriod;
-  //   },
-  //   [markedDates]
-  // );
-
   return (
     <>
       <StatusBar
