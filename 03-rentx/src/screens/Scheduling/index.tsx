@@ -58,15 +58,10 @@ export function Scheduling() {
   }
 
   function handleConfirmRentalPeriod() {
-    if (rentalPeriod === null) {
-      Alert.alert('Selecione o intervalo para alugar');
-    }
-    else {
-      navigation.navigate('SchedulingDetails', {
-        car,
-        dates: Object.keys(markedDates),
-      });
-    }
+    navigation.navigate('SchedulingDetails', {
+      car,
+      dates: Object.keys(markedDates),
+    });
   }
 
   function handleChangeDate(date: DayProps) {
@@ -154,6 +149,7 @@ export function Scheduling() {
           <Button
             title="Confirmar"
             onPress={handleConfirmRentalPeriod}
+            disabled={rentalPeriod === null}
           />
         </Footer>
       </Container>

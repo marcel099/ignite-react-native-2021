@@ -64,6 +64,10 @@ export function SchedulingDetails() {
     rentalPeriod,
     setRentalPeriod
   ] = useState<RentalPeriod | null>(null);
+  const [
+    isSendingSchedule,
+    setIsSendingSchedule
+  ] = useState(false);
 
   function handleGoBackScheduling() {
     navigation.pop();
@@ -71,6 +75,7 @@ export function SchedulingDetails() {
 
   async function handleConfirmRental() {
     try {
+      setIsSendingSchedule(true);
       const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
 
       const unavailable_dates = [
@@ -94,6 +99,8 @@ export function SchedulingDetails() {
     } catch (err) {
       console.log(err)
       Alert.alert("Não foi possível confirmar o agendamento");
+    } finally {
+      setIsSendingSchedule(false);
     }
   }
 
@@ -193,6 +200,8 @@ export function SchedulingDetails() {
           title="Alugar agora"
           color={theme.colors.success}
           onPress={handleConfirmRental}
+          disabled={isSendingSchedule}
+          isLoading={isSendingSchedule}
         />
       </Footer>
     </Container>
