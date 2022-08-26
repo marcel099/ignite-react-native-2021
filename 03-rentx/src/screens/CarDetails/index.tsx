@@ -32,16 +32,14 @@ type CarDetailsScreenProp = StackScreenProps<AppStackParamList, 'CarDetails'>;
 export function CarDetails() {
   const navigation = useNavigation<CarDetailsScreenProp['navigation']>();
   const route = useRoute<CarDetailsScreenProp['route']>();
-  const {
-    car
-  } = route.params;
+  const { car } = route.params;
 
   function handleGoBackHome() {
     navigation.pop();
   }
 
   function handleShowScheduling() {
-    navigation.navigate('Scheduling');
+    navigation.navigate('Scheduling', { car });
   }
 
   return (

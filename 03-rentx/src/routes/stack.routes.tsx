@@ -15,8 +15,13 @@ export type AppStackParamList = {
   CarDetails: {
     car: CarDTO;
   };
-  Scheduling: undefined;
-  SchedulingDetails: undefined;
+  Scheduling: {
+    car: CarDTO;
+  };
+  SchedulingDetails: {
+    car: CarDTO;
+    dates: string[];
+  };
   ScheduleCompleted: undefined;
 }
 

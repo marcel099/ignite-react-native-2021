@@ -33,7 +33,6 @@ export function CarCard({
   },
   ...rest
 }: Props) {
-  console.log(fuel_type);
   const MotorIcon = getAccessoryIcon(fuel_type);
 
   return (

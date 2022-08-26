@@ -22,7 +22,6 @@ type HomeScreenProp = StackNavigationProp<AppStackParamList, 'Home'>;
 
 export function Home() {
   const navigation = useNavigation<HomeScreenProp>();
-  console.log('hi')
 
   const [cars, setCars] = useState<CarDTO[]>([]);
   const [isFetchingCars, setIsFetchingCars] = useState(true);
