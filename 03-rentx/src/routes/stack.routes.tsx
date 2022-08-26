@@ -8,9 +8,13 @@ import { Scheduling } from "../screens/Scheduling";
 import { SchedulingDetails } from "../screens/SchedulingDetails";
 import { ScheduleCompleted } from "../screens/ScheduleCompleted";
 
+import { CarDTO } from "../global/dtos/CarDTO";
+
 export type AppStackParamList = {
   Home: undefined;
-  CarDetails: undefined;
+  CarDetails: {
+    car: CarDTO;
+  };
   Scheduling: undefined;
   SchedulingDetails: undefined;
   ScheduleCompleted: undefined;

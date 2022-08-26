@@ -5,7 +5,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RFValue } from "react-native-responsive-fontsize";
 
 import LogoSvg from '../../assets/logo.svg';
-import { CarDTO } from "../../dtos/CarDTO";
+import { CarDTO } from "../../global/dtos/CarDTO";
 import { CarCard } from "../../components/CarCard";
 import { AppLoader } from "../../components/AppLoader";
 import { api } from "../../services/api";
@@ -22,6 +22,7 @@ type HomeScreenProp = StackNavigationProp<AppStackParamList, 'Home'>;
 
 export function Home() {
   const navigation = useNavigation<HomeScreenProp>();
+  console.log('hi')
 
   const [cars, setCars] = useState<CarDTO[]>([]);
   const [isFetchingCars, setIsFetchingCars] = useState(true);
@@ -43,8 +44,8 @@ export function Home() {
     fetchCars()
   }, []);
 
-  function handleShowCarDetails() {
-    navigation.navigate('CarDetails');
+  function handleShowCarDetails(car: CarDTO) {
+    navigation.navigate('CarDetails', { car });
   }
 
   return (
@@ -77,7 +78,7 @@ export function Home() {
               renderItem={({ item }) => (
                 <CarCard
                   data={item}
-                  onPress={handleShowCarDetails}
+                  onPress={() => handleShowCarDetails(item)}
                 />
               )}
               contentContainerStyle={{
