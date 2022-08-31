@@ -1,3 +1,4 @@
+import { StatusBar } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 
@@ -43,52 +44,59 @@ export function CarDetails() {
   }
 
   return (
-    <Container>
-      <Header>
-        <BackButton
-          onPress={handleGoBackHome}
-        />
-      </Header> 
+    <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      <Container>
+        <Header>
+          <BackButton
+            onPress={handleGoBackHome}
+          />
+        </Header> 
 
-      <CarImages>
-        <ImageSlider imagesUrl={car.photos} />
-      </CarImages>
+        <CarImages>
+          <ImageSlider imagesUrl={car.photos} />
+        </CarImages>
 
-      <Content>
-        <Details>
-          <Description>
-            <Brand>{car.brand}</Brand>
-            <Name>{car.name}</Name>
-          </Description>
+        <Content>
+          <Details>
+            <Description>
+              <Brand>{car.brand}</Brand>
+              <Name>{car.name}</Name>
+            </Description>
 
-          <Rent>
-            <Period>{car.rent.period}</Period>
-            <Price>{car.rent.price}</Price>
-          </Rent>
-        </Details>
+            <Rent>
+              <Period>{car.rent.period}</Period>
+              <Price>{car.rent.price}</Price>
+            </Rent>
+          </Details>
 
-        <Accessories>
-          {
-            car.accessories.map(accessory => (
-              <Accessory
-                key={accessory.type}
-                name={accessory.name}
-                icon={getAccessoryIcon(accessory.type)}
-              />
-            ))
-          }
-        </Accessories>
+          <Accessories>
+            {
+              car.accessories.map(accessory => (
+                <Accessory
+                  key={accessory.type}
+                  name={accessory.name}
+                  icon={getAccessoryIcon(accessory.type)}
+                />
+              ))
+            }
+          </Accessories>
 
-        <About>{ car.about }</About>
+          <About>{ car.about }</About>
 
-      </Content>
+        </Content>
 
-      <Footer>
-        <Button
-          title="Escolher período de aluguel"
-          onPress={handleShowScheduling}
-        />
-      </Footer>
-    </Container>
+        <Footer>
+          <Button
+            title="Escolher período de aluguel"
+            onPress={handleShowScheduling}
+          />
+        </Footer>
+      </Container>
+    </>
   );
 }
