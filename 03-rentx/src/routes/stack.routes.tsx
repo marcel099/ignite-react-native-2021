@@ -2,6 +2,7 @@ import {
   createStackNavigator
 } from "@react-navigation/stack";
 
+import { Splash } from "../screens/Splash";
 import { Home } from "../screens/Home";
 import { CarDetails } from "../screens/CarDetails";
 import { Scheduling } from "../screens/Scheduling";
@@ -12,6 +13,7 @@ import { MyCars } from "../screens/MyCars";
 import { CarDTO } from "../global/dtos/CarDTO";
 
 export type AppStackParamList = {
+  Splash: undefined;
   Home: undefined;
   CarDetails: {
     car: CarDTO;
@@ -35,7 +37,12 @@ export function StackRoutes() {
       screenOptions={{
         headerShown: false,
       }}
+      initialRouteName="Splash"
     >
+      <Screen
+        name="Splash"
+        component={Splash}
+      />
       <Screen
         name="Home"
         component={Home}
