@@ -5,6 +5,7 @@ import {
   FlatList,
   StatusBar,
   StyleSheet,
+  useWindowDimensions,
 } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -18,7 +19,7 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   useAnimatedGestureHandler,
-  // withSpring,
+  withSpring,
 } from "react-native-reanimated";
 import { useTheme } from "styled-components";
 
@@ -41,6 +42,7 @@ const ButtonAnimated = Animated.createAnimatedComponent(RectButton);
 type HomeScreenProp = StackNavigationProp<AppStackParamList, 'Home'>;
 
 export function Home() {
+  const { width: windowWidth } = useWindowDimensions();
   const theme = useTheme();
   const navigation = useNavigation<HomeScreenProp>();
 
@@ -59,6 +61,8 @@ export function Home() {
     };
   });
 
+  // const midScreen = windowWidth / 2;
+
   const onGestureEvent = useAnimatedGestureHandler({
     onStart(event, ctx: any) {
       ctx.positionX = positionX.value;
@@ -68,9 +72,8 @@ export function Home() {
       positionX.value = ctx.positionX + event.translationX;
       positionY.value = ctx.positionY + event.translationY;
     },
-    onEnd() {
-      // positionX.value = withSpring(0);
-      // positionY.value = withSpring(0);
+    onEnd(event) {
+      positionX.value = withSpring(0);
     },
   });
 
