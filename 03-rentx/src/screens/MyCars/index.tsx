@@ -5,7 +5,7 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "styled-components";
 
-import { AppLoader } from "../../components/AppLoader";
+import { CarsLoader } from "../../components/CarsLoader";
 import { BackButton } from "../../components/BackButton";
 
 import { CarDTO } from "../../global/dtos/CarDTO";
@@ -95,7 +95,7 @@ export function MyCars() {
         </Header>
         {
           isFetchingCars ? (
-            <AppLoader />
+            <CarsLoader />
           ) : (
             <Content>
               <Appointments>

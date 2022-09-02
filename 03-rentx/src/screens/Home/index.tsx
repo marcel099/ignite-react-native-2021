@@ -25,7 +25,7 @@ import { useTheme } from "styled-components";
 import LogoSvg from '../../assets/logo.svg';
 import { CarDTO } from "../../global/dtos/CarDTO";
 import { CarCard } from "../../components/CarCard";
-import { AppLoader } from "../../components/AppLoader";
+import { CarsLoader } from "../../components/CarsLoader";
 import { api } from "../../services/api";
 import { AppStackParamList } from "../../routes/stack.routes";
 
@@ -129,7 +129,7 @@ export function Home() {
 
         {
           isFetchingCars ? (
-            <AppLoader />
+            <CarsLoader />
           ) : (
             <FlatList
               data={cars}
