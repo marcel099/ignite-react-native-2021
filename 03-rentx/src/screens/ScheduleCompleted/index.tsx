@@ -23,7 +23,7 @@ export function ScheduleCompleted() {
   const { width } = useWindowDimensions();
 
   function handleGoBackHome() {
-    navigation.popToTop();
+    navigation.navigate('Home');
   }
 
   return (

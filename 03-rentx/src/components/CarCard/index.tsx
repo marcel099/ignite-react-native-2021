@@ -2,6 +2,7 @@ import { TouchableOpacityProps } from 'react-native';
 
 import { CarDTO } from '../../global/dtos/CarDTO';
 import { getAccessoryIcon } from '../../global/utils/getAccessoryIcon';
+import { formatNumberToCurrency } from '../../utils/formatters';
 
 import {
   Container,
@@ -44,7 +45,7 @@ export function CarCard({
         <About>
           <Rent>
             <Period>{period}</Period>
-            <Price>{price}</Price>
+            <Price>{formatNumberToCurrency(price)}</Price>
           </Rent>
 
           <Type>

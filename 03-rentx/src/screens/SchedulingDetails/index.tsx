@@ -13,8 +13,8 @@ import { getPlatformDate } from '../../components/Calendar';
 import { ImageSlider } from "../../components/ImageSlider";
 
 import { getAccessoryIcon } from '../../global/utils/getAccessoryIcon'
-
 import { AppStackParamList } from "../../routes/stack.routes";
+import { formatNumberToCurrency } from '../../utils/formatters';
 
 import { api } from '../../services/api';
 
@@ -142,7 +142,7 @@ export function SchedulingDetails() {
 
             <Rent>
               <Period>{car.rent.period}</Period>
-              <Price>{car.rent.price}</Price>
+              <Price>{formatNumberToCurrency(car.rent.price)}</Price>
             </Rent>
           </Details>
 
@@ -188,9 +188,11 @@ export function SchedulingDetails() {
             <RentalPriceLabel>TOTAL</RentalPriceLabel>
             <RentalPriceDetails>
               <RentalPriceQuota>
-                R$ {car.rent.price} x{dates.length} diárias
+                {formatNumberToCurrency(car.rent.price)} x{dates.length} diárias
               </RentalPriceQuota>
-              <RentalPricetotal>R$ {rentTotal}</RentalPricetotal> 
+              <RentalPricetotal>
+                {formatNumberToCurrency(rentTotal)}
+              </RentalPricetotal> 
             </RentalPriceDetails>
           </RentalPrice>
 

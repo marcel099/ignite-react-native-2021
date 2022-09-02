@@ -11,14 +11,13 @@ import Animated, {
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { useTheme } from 'styled-components';
 
-
 import { Accessory } from "../../components/Accessory";
 import { Button } from "../../components/Button";
 import { ImageSlider } from "../../components/ImageSlider";
 
 import { getAccessoryIcon } from '../../global/utils/getAccessoryIcon';
-
 import { AppStackParamList } from "../../routes/stack.routes";
+import { formatNumberToCurrency } from '../../utils/formatters';
 
 import {
   Container,
@@ -130,7 +129,7 @@ export function CarDetails() {
 
             <Rent>
               <Period>{car.rent.period}</Period>
-              <Price>{car.rent.price}</Price>
+              <Price>{formatNumberToCurrency(car.rent.price)}</Price>
             </Rent>
           </Details>
 
