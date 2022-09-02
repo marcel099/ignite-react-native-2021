@@ -1,5 +1,5 @@
 import { TouchableOpacityProps } from 'react-native';
-import GasolineSvg from '../../assets/gasoline.svg'
+
 import { CarDTO } from '../../global/dtos/CarDTO';
 import { getAccessoryIcon } from '../../global/utils/getAccessoryIcon';
 

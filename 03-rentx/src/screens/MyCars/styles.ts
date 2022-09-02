@@ -10,7 +10,7 @@ export const Container = styled.View`
 `;
 
 export const Header = styled.View`
-  justify-content: center;
+  justify-content: flex-start;
   background-color: ${({ theme }) => theme.colors.header};
 
   width: 100%; 
@@ -18,22 +18,25 @@ export const Header = styled.View`
 
   padding: ${RFValue(25)}px;
   padding-top: ${getStatusBarHeight() + RFValue(31)}px;
+  padding-bottom: 0;
 `;
 
 export const Title = styled.Text`
   font-size: ${RFValue(30)}px;
   font-family: ${({ theme }) => theme.fonts.secondary_600};
   color: ${({ theme }) => theme.colors.shape};
+  line-height: ${RFValue(34)}px;
 
-  margin-top: ${RFValue(34)}px;
+  margin-top: ${RFValue(24)}px;
 `;
 
 export const SubTitle = styled.Text`
   font-size: ${RFValue(15)}px;
   font-family: ${({ theme }) => theme.fonts.secondary_400};
   color: ${({ theme }) => theme.colors.shape};
+  line-height: ${RFValue(34)}px;
 
-  margin-top: ${RFValue(18)}px;
+  margin-top: ${RFValue(14)}px;
   margin-bottom: ${RFValue(34)}px;
 `;
 

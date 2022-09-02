@@ -8,7 +8,6 @@ import { Feather } from "@expo/vector-icons";
 import { format } from 'date-fns';
 
 import { Accessory } from "../../components/Accessory";
-import { BackButton } from "../../components/BackButton";
 import { Button } from "../../components/Button";
 import { getPlatformDate } from '../../components/Calendar';
 import { ImageSlider } from "../../components/ImageSlider";

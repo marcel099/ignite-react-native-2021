@@ -1,4 +1,3 @@
-import "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import {
   Inter_400Regular,

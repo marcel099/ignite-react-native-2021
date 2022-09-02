@@ -8,13 +8,11 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
-import { RFValue } from 'react-native-responsive-fontsize';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { useTheme } from 'styled-components';
 
 
 import { Accessory } from "../../components/Accessory";
-// import { BackButton } from "../../components/BackButton";
 import { Button } from "../../components/Button";
 import { ImageSlider } from "../../components/ImageSlider";
 
@@ -25,7 +23,6 @@ import { AppStackParamList } from "../../routes/stack.routes";
 import {
   Container,
   Header,
-  // CarImages,
   Details,
   Description,
   Brand,
