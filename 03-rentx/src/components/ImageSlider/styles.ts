@@ -6,11 +6,16 @@ export const Container = styled.View`
   width: 100%;
 `;
 
+export const Header = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: ${RFValue(31)};
+`;
+
 export const ImageIndexes = styled.View`
   flex-direction: row;
-  align-self: flex-end;
-
-  padding-right: ${RFValue(24)}px;
 `;
 
 interface ImageIndexProps {
@@ -35,6 +40,8 @@ export const CarImageWrapper = styled.View`
 
   width: ${Dimensions.get('window').width}px;
   height: ${RFValue(132)}px;
+
+  margin-bottom: ${RFValue(35)}px;
 `;
 
 export const CarImage = styled.Image`

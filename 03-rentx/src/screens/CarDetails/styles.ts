@@ -10,26 +10,11 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.background_secondary};
 `;
 
-export const Header = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  margin-top: ${getStatusBarHeight() + RFValue(18)}px;
+export const Header = styled.View`  
+  margin-top: ${getStatusBarHeight()}px;
   margin-left: ${RFValue(24)}px;
+  margin-right: ${RFValue(24)}px;
 `;
-
-export const CarImages = styled.View`
-  margin-top: ${RFValue(32)}px;
-`;
-
-export const Content = styled.ScrollView.attrs({
-  contentContainerStyle: {
-    padding: 24,
-    alignItems: 'center',
-  },
-  showsVerticalScrollIndicator: true,
-})``;
 
 export const Details = styled.View`
   flex-direction: row;
@@ -37,7 +22,6 @@ export const Details = styled.View`
   justify-content: space-between;
 
   width: 100%;
-  margin-top: ${RFValue(38)}px;
 `;
 
 export const Description = styled.View``;

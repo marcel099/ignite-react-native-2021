@@ -1,7 +1,11 @@
 import { useRef, useState } from "react";
 import { FlatList, ViewToken } from "react-native";
+
+import { BackButton } from "../BackButton";
+
 import {
   Container,
+  Header,
   ImageIndexes,
   ImageIndex,
   CarImageWrapper,
@@ -15,9 +19,10 @@ interface ChangeImageProps {
 
 interface Props {
   imagesUrl: string[];
+  handleGoBack: () => void;
 }
 
-export function ImageSlider({ imagesUrl }: Props) {
+export function ImageSlider({ imagesUrl, handleGoBack }: Props) {
   const [imageIndex, setImageIndex] = useState(0);
 
   const indexChanged = useRef((info: ChangeImageProps) => {
@@ -27,32 +32,37 @@ export function ImageSlider({ imagesUrl }: Props) {
 
   return (
     <Container>
-      <ImageIndexes>
-        {
-          imagesUrl.map((_, idx) => (
-            <ImageIndex
-              key={String(idx)}
-              active={idx === imageIndex}
-            />
-          ))
-        }
-      </ImageIndexes>
-      
-        <FlatList
-          data={imagesUrl}
-          keyExtractor={key => key}
-          renderItem={({ item: imageUrl }) => (
-            <CarImageWrapper>
-              <CarImage
-                source={{ uri: imageUrl }}
-                resizeMode="contain"
-              />
-            </CarImageWrapper>
-          )}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          onViewableItemsChanged={indexChanged.current}
+      <Header>
+        <BackButton
+          onPress={handleGoBack}
         />
+        <ImageIndexes>
+          {
+            imagesUrl.map((_, idx) => (
+              <ImageIndex
+                key={String(idx)}
+                active={idx === imageIndex}
+              />
+            ))
+          }
+        </ImageIndexes>
+      </Header>
+      
+      <FlatList
+        data={imagesUrl}
+        keyExtractor={key => key}
+        renderItem={({ item: imageUrl }) => (
+          <CarImageWrapper>
+            <CarImage
+              source={{ uri: imageUrl }}
+              resizeMode="contain"
+            />
+          </CarImageWrapper>
+        )}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        onViewableItemsChanged={indexChanged.current}
+      />
     </Container>
   );
 }

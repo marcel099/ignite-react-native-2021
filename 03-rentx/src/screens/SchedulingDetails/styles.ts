@@ -11,16 +11,9 @@ export const Container = styled.View`
 `;
 
 export const Header = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-
-  margin-top: ${getStatusBarHeight() + RFValue(18)}px;
+  margin-top: ${getStatusBarHeight()}px;
   margin-left: ${RFValue(24)}px;
-`;
-
-export const CarImages = styled.View`
-  margin-top: ${RFValue(32)}px;
+  margin-right: ${RFValue(24)}px;
 `;
 
 export const Content = styled.ScrollView.attrs({
@@ -37,7 +30,6 @@ export const Details = styled.View`
   justify-content: space-between;
 
   width: 100%;
-  margin-top: ${RFValue(38)}px;
 `;
 
 export const Description = styled.View``;

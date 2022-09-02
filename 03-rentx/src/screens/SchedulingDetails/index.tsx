@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert } from 'react-native';
+import { Alert, StatusBar } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RFValue } from "react-native-responsive-fontsize";
@@ -22,7 +22,6 @@ import { api } from '../../services/api';
 import {
   Container,
   Header,
-  CarImages,
   Content,
   Details,
   Description,
@@ -121,89 +120,93 @@ export function SchedulingDetails() {
   const rentTotal = car.rent.price * dates.length;
 
   return (
-    <Container>
-      <Header>
-        <BackButton
-          onPress={handleGoBackScheduling}
-        />
-      </Header> 
-
-      <CarImages>
-        <ImageSlider imagesUrl={car.photos} />
-      </CarImages>
-
-      <Content>
-        <Details>
-          <Description>
-            <Brand>{car.brand}</Brand>
-            <Name>{car.name}</Name>
-          </Description>
-
-          <Rent>
-            <Period>{car.rent.period}</Period>
-            <Price>{car.rent.price}</Price>
-          </Rent>
-        </Details>
-
-        <Accessories>
-          {
-            car.accessories.map(accessory => (
-              <Accessory
-                key={accessory.type}
-                name={accessory.name}
-                icon={getAccessoryIcon(accessory.type)}
-              />
-            ))
-          }
-        </Accessories>
-
-        <RentalPeriod>
-          <CalendarIcon>
-            <Feather
-              name="calendar"
-              size={RFValue(24)}
-              color={theme.colors.shape}
-            />
-          </CalendarIcon>
-
-          <DateInfo>
-            <DateTitle>DE</DateTitle>
-            <DateValue>{rentalPeriod?.formattedStart ?? ''}</DateValue>
-          </DateInfo>
-
-          <Feather
-            name="chevron-right"
-            size={RFValue(10)}
-            color={theme.colors.text}
+    <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      <Container>
+        <Header>
+          <ImageSlider
+            imagesUrl={car.photos}
+            handleGoBack={handleGoBackScheduling}
           />
+        </Header> 
 
-          <DateInfo>
-            <DateTitle>ATÉ</DateTitle>
-            <DateValue>{rentalPeriod?.formattedEnd ?? ''}</DateValue>
-          </DateInfo>
-        </RentalPeriod>
+        <Content>
+          <Details>
+            <Description>
+              <Brand>{car.brand}</Brand>
+              <Name>{car.name}</Name>
+            </Description>
 
-        <RentalPrice>
-          <RentalPriceLabel>TOTAL</RentalPriceLabel>
-          <RentalPriceDetails>
-            <RentalPriceQuota>
-              R$ {car.rent.price} x{dates.length} diárias
-            </RentalPriceQuota>
-            <RentalPricetotal>R$ {rentTotal}</RentalPricetotal> 
-          </RentalPriceDetails>
-        </RentalPrice>
+            <Rent>
+              <Period>{car.rent.period}</Period>
+              <Price>{car.rent.price}</Price>
+            </Rent>
+          </Details>
 
-      </Content>
+          <Accessories>
+            {
+              car.accessories.map(accessory => (
+                <Accessory
+                  key={accessory.type}
+                  name={accessory.name}
+                  icon={getAccessoryIcon(accessory.type)}
+                />
+              ))
+            }
+          </Accessories>
 
-      <Footer>
-        <Button
-          title="Alugar agora"
-          color={theme.colors.success}
-          onPress={handleConfirmRental}
-          disabled={isSendingSchedule}
-          isLoading={isSendingSchedule}
-        />
-      </Footer>
-    </Container>
+          <RentalPeriod>
+            <CalendarIcon>
+              <Feather
+                name="calendar"
+                size={RFValue(24)}
+                color={theme.colors.shape}
+              />
+            </CalendarIcon>
+
+            <DateInfo>
+              <DateTitle>DE</DateTitle>
+              <DateValue>{rentalPeriod?.formattedStart ?? ''}</DateValue>
+            </DateInfo>
+
+            <Feather
+              name="chevron-right"
+              size={RFValue(10)}
+              color={theme.colors.text}
+            />
+
+            <DateInfo>
+              <DateTitle>ATÉ</DateTitle>
+              <DateValue>{rentalPeriod?.formattedEnd ?? ''}</DateValue>
+            </DateInfo>
+          </RentalPeriod>
+
+          <RentalPrice>
+            <RentalPriceLabel>TOTAL</RentalPriceLabel>
+            <RentalPriceDetails>
+              <RentalPriceQuota>
+                R$ {car.rent.price} x{dates.length} diárias
+              </RentalPriceQuota>
+              <RentalPricetotal>R$ {rentTotal}</RentalPricetotal> 
+            </RentalPriceDetails>
+          </RentalPrice>
+
+        </Content>
+
+        <Footer>
+          <Button
+            title="Alugar agora"
+            color={theme.colors.success}
+            onPress={handleConfirmRental}
+            disabled={isSendingSchedule}
+            isLoading={isSendingSchedule}
+          />
+        </Footer>
+      </Container>
+    </>
   );
 }
