@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Alert,
+  BackHandler,
   FlatList,
   StatusBar,
   StyleSheet,
@@ -90,6 +91,10 @@ export function Home() {
     fetchCars()
   }, []);
 
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => true);
+  }, []);
+
   function handleShowCarDetails(car: CarDTO) {
     navigation.navigate('CarDetails', { car });
   }
@@ -112,9 +117,13 @@ export function Home() {
               width={RFValue(108)}
               height={RFValue(12)}
             />
-            <TotalCars>
-              Total de {cars.length} carros
-            </TotalCars>
+            {
+              !isFetchingCars && (
+                <TotalCars>
+                  Total de {cars.length} carros
+                </TotalCars>
+              )
+            }
           </HeaderContent>
         </Header>
 
