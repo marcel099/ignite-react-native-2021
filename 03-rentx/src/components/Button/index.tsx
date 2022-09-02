@@ -12,6 +12,7 @@ interface Props extends RectButtonProps {
   color?: string;
   disabled?: boolean;
   isLoading?: boolean;
+  light?: boolean;
 }
 
 export function Button({
@@ -19,6 +20,7 @@ export function Button({
   color,
   disabled = false,
   isLoading = false,
+  light = false,
   ...rest
 }: Props) {
   const theme = useTheme();
@@ -36,7 +38,7 @@ export function Button({
             color={theme.colors.shape}
           />
         ) : (
-          <Title>{title}</Title>
+          <Title light={light}>{title}</Title>
         )
       }
     </Container>
