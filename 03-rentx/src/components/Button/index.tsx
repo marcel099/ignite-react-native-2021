@@ -1,4 +1,5 @@
-import { ActivityIndicator, TouchableOpacityProps } from "react-native";
+import { ActivityIndicator } from "react-native";
+import { RectButtonProps } from "react-native-gesture-handler";
 import { useTheme } from "styled-components";
 
 import {
@@ -6,7 +7,7 @@ import {
   Title,
 } from "./styles";
 
-interface Props extends TouchableOpacityProps {
+interface Props extends RectButtonProps {
   title: string; 
   color?: string;
   disabled?: boolean;
@@ -25,7 +26,7 @@ export function Button({
   return (
     <Container
       backgroundColor={color ? color : theme.colors.main}
-      disabled={disabled}
+      enabled={!disabled}
       style={{ opacity: (disabled) ? .5 : 1}}
       {...rest}
     >

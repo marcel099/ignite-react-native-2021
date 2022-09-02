@@ -11,7 +11,7 @@ export const Header = styled.View`
   justify-content: space-between;
   align-items: center;
 
-  margin-top: ${RFValue(31)};
+  margin-top: ${RFValue(31)}px;
 `;
 
 export const ImageIndexes = styled.View`
