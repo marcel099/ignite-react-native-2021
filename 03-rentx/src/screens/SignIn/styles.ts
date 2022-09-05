@@ -34,8 +34,12 @@ export const Form = styled.View`
   margin: ${RFValue(64)}px 0;
 `;
 
+export const InputSpace = styled.View`
+  height: ${RFValue(8)}px;
+`;
+
 export const Footer = styled.View``;
 
-export const FooterSpace = styled.View`
+export const ButtonSpace = styled.View`
   height: ${RFValue(8)}px;
 `;

@@ -3,6 +3,7 @@ import { useTheme } from "styled-components";
 
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
+import { PasswordInput } from "../../components/PasswordInput";
 
 import {
   Container,
@@ -10,8 +11,9 @@ import {
   Title,
   SubTitle,
   Form,
+  InputSpace,
   Footer,
-  FooterSpace,
+  ButtonSpace,
 } from "./styles";
 
 export function SignIn() {
@@ -44,6 +46,13 @@ export function SignIn() {
             autoCorrect={false}
             autoCapitalize="none"
           />
+          <InputSpace />
+          <PasswordInput
+            iconName="lock"
+            placeholder="Senha"
+            autoCorrect={false}
+            autoCapitalize="none"
+          />
         </Form>
 
         <Footer>
@@ -51,7 +60,7 @@ export function SignIn() {
             title="Login"
             onPress={() => {}}
           />
-          <FooterSpace/>
+          <ButtonSpace />
           <Button
             title="Criar conta gratuita"
             onPress={() => {}}
