@@ -15,8 +15,20 @@ interface Props extends TextInputProps {
 }
 
 export function PasswordInput({ iconName, ...rest }: Props) {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const theme = useTheme();
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFilledOut, setIsFilledOut] = useState(false);
+
+  function handleInputFocus() {
+    setIsFocused(true);
+  }
+
+  function handleInputBlur() {
+    setIsFocused(false);
+    setIsFilledOut(!!rest.value);
+  }
 
   function handlePasswordVisibilityChange() {
     setIsPasswordVisible(previousState => !previousState);
@@ -24,16 +36,24 @@ export function PasswordInput({ iconName, ...rest }: Props) {
 
   return (
     <Container>
-      <IconContainer>
+      <IconContainer
+        isFocused={isFocused}
+      >
         <Feather
           name={iconName}
           size={24}
-          color={theme.colors.text_details}
+          color={isFocused || isFilledOut
+            ? theme.colors.main
+            : theme.colors.text_details
+          }
         />
       </IconContainer>
 
       <InputText
-        secureTextEntry={isPasswordVisible}
+        isFocused={isFocused}
+        secureTextEntry={!isPasswordVisible}
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
         {...rest}
       />
 
@@ -41,7 +61,7 @@ export function PasswordInput({ iconName, ...rest }: Props) {
         onPress={handlePasswordVisibilityChange}
       >
         <Feather
-          name={isPasswordVisible ? "eye" : "eye-off"}
+          name={!isPasswordVisible ? "eye" : "eye-off"}
           size={24}
           color={theme.colors.text_details}
         />

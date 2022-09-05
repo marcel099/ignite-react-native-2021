@@ -1,7 +1,11 @@
 import { TextInput } from 'react-native';
-import styled from "styled-components/native";
+import styled, { css } from "styled-components/native";
 import { RFValue } from "react-native-responsive-fontsize";
 import { BorderlessButton } from 'react-native-gesture-handler';
+
+interface NotContainerProps {
+  isFocused: boolean;
+}
 
 export const Container = styled.View`
   width: 100%;
@@ -9,18 +13,25 @@ export const Container = styled.View`
   flex-direction: row;
 `;
 
-export const IconContainer = styled.View`
+export const IconContainer = styled.View<NotContainerProps>`
   justify-content: center;
   align-items: center;
 
-  height: ${RFValue(55)}px;
+  height: ${RFValue(53)}px;
   width: ${RFValue(55)}px; 
   margin-right: ${RFValue(2)}px;
 
   background-color: ${({ theme }) => theme.colors.background_secondary};
+
+  border-bottom-width: ${RFValue(2)}px;
+  border-bottom-color: transparent;
+
+  ${({ isFocused, theme }) => isFocused && css`
+    border-bottom-color: ${theme.colors.main};
+  `}
 `;
 
-export const InputText = styled(TextInput)`
+export const InputText = styled(TextInput)<NotContainerProps>`
   flex: 1;
 
   background-color: ${({ theme }) => theme.colors.background_secondary};
@@ -29,13 +40,20 @@ export const InputText = styled(TextInput)`
   font-size: ${RFValue(15)}px;
 
   padding: 0 ${RFValue(23)}px;
+
+  border-bottom-width: ${RFValue(2)}px;
+  border-bottom-color: transparent;
+
+  ${({ isFocused, theme }) => isFocused && css`
+    border-bottom-color: ${theme.colors.main};
+  `}
 `;
 
 export const ChangePasswordVisibilityButton = styled(BorderlessButton)`
   justify-content: center;
   align-items: center;
 
-  height: ${RFValue(55)}px;
+  height: ${RFValue(53)}px;
   width: ${RFValue(56)}px; 
 
   background-color: ${({ theme }) => theme.colors.background_secondary};
