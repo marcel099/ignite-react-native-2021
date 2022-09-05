@@ -59,6 +59,12 @@ export function SignUpSecondStep() {
     try {
       const data = { password, repeatedPassword };
       await schema.validate(data);
+
+      navigation.navigate('Confirmation', {
+        title: 'Conta criada!',
+        message: `Agora é só fazer login\ne aproveitar.`,
+        nextScreenName: 'SignIn',
+      });
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         Alert.alert('Opa', error.message);

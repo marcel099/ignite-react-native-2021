@@ -1,6 +1,6 @@
 import { StatusBar, useWindowDimensions } from "react-native";
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import { RFValue } from "react-native-responsive-fontsize";
 
 import LogoSvg from '../../assets/logo_background_gray.svg';
@@ -16,14 +16,19 @@ import {
   Footer,
 } from "./styles";
 
-type SchedulingDetailsScreenProp = StackNavigationProp<AppStackParamList, 'SchedulingDetails'>;
+type ConfirmationScreenProp =
+  StackScreenProps<AppStackParamList, 'Confirmation'>;
 
-export function ScheduleCompleted() {
-  const navigation = useNavigation<SchedulingDetailsScreenProp>();
+export function Confirmation() {
+  const navigation =
+    useNavigation<ConfirmationScreenProp['navigation']>();
+  const { params: { title, message, nextScreenName }} =
+    useRoute<ConfirmationScreenProp['route']>();
+
   const { width } = useWindowDimensions();
 
   function handleGoBackHome() {
-    navigation.navigate('Home');
+    navigation.navigate(nextScreenName as any);
   }
 
   return (
@@ -45,12 +50,8 @@ export function ScheduleCompleted() {
             height={RFValue(80)}
           />
           
-          <Title>Carro alugado!</Title>
-          <Message>
-            Agora você só precisa ir {'\n'}
-            até a concessionária da RENTX {'\n'}
-            pegar o seu automóvel.
-          </Message>
+          <Title>{ title }</Title>
+          <Message>{ message }</Message>
         </Content>
 
         <Footer>

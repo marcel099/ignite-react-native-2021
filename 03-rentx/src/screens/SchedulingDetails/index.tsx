@@ -93,7 +93,11 @@ export function SchedulingDetails() {
         unavailable_dates,
       })
 
-      navigation.navigate('ScheduleCompleted');
+      navigation.navigate('Confirmation', {
+        title: 'Carro alugado!',
+        message: `Agora você só precisa ir\naté a concessionária da RENTX\npegar o seu automóvel.`,
+        nextScreenName: 'Home'
+      });
     } catch (err) {
       console.log(err)
       Alert.alert("Não foi possível confirmar o agendamento");

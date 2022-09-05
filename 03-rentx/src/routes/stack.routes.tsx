@@ -10,7 +10,7 @@ import { Home } from "../screens/Home";
 import { CarDetails } from "../screens/CarDetails";
 import { Scheduling } from "../screens/Scheduling";
 import { SchedulingDetails } from "../screens/SchedulingDetails";
-import { ScheduleCompleted } from "../screens/ScheduleCompleted";
+import { Confirmation } from "../screens/Confirmation";
 import { MyCars } from "../screens/MyCars";
 
 import { CarDTO } from "../global/dtos/CarDTO";
@@ -37,7 +37,11 @@ export type AppStackParamList = {
     car: CarDTO;
     dates: string[];
   };
-  ScheduleCompleted: undefined;
+  Confirmation: {
+    title: string;
+    message: string;
+    nextScreenName: keyof AppStackParamList;
+  };
   MyCars: undefined;
 }
 
@@ -87,8 +91,8 @@ export function StackRoutes() {
         component={SchedulingDetails}
       />
       <Screen
-        name="ScheduleCompleted"
-        component={ScheduleCompleted}
+        name="Confirmation"
+        component={Confirmation}
       />
       <Screen
         name="MyCars"
