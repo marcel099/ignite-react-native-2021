@@ -19,7 +19,13 @@ export type AppStackParamList = {
   Splash: undefined;
   SignIn: undefined;
   SignUpFirstStep: undefined;
-  SignUpSecondStep: undefined;
+  SignUpSecondStep: {
+    user: {
+      name: string;
+      email: string;
+      driverLicense: string;
+    }
+  };
   Home: undefined;
   CarDetails: {
     car: CarDTO;

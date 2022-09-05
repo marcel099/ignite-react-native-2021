@@ -26,5 +26,5 @@ export const Title = styled.Text<TitleProps>`
   font-size: ${RFValue(15)}px;
   font-family: ${({ theme }) => theme.fonts.primary_500};
   color: ${({ theme, light }) => light
-    ? theme.colors.header : theme.colors.shape};
+    ? theme.colors.header : theme.colors.background_secondary};
 `;
