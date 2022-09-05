@@ -18,22 +18,6 @@ export const ImageIndexes = styled.View`
   flex-direction: row;
 `;
 
-interface ImageIndexProps {
-  active: boolean;
-}
-
-export const ImageIndex = styled.View<ImageIndexProps>`
-  width: ${RFValue(6)}px;
-  height: ${RFValue(6)}px;
-
-  background-color: ${({ theme, active }) =>
-    active ? theme.colors.title : theme.colors.shape
-  };
-
-  margin-left: ${RFValue(8)}px;
-  border-radius: ${RFValue(4)}px;
-`;
-
 export const CarImageWrapper = styled.View`
   justify-content: center;
   align-items: center;

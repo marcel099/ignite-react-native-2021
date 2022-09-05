@@ -6,12 +6,16 @@ import {
   Keyboard,
   Alert,
 } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
 import * as Yup from "yup";
 import { useTheme } from "styled-components";
 
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { PasswordInput } from "../../components/PasswordInput";
+
+import { AppStackParamList } from '../../routes/stack.routes';
 
 import {
   Container,
@@ -24,6 +28,8 @@ import {
   ButtonSpace,
 } from "./styles";
 
+type SignInScreenProp = StackScreenProps<AppStackParamList, 'SignIn'>;
+
 const schema = Yup.object().shape({
   email: Yup.string()
     .required('E-mail obrigatório')
@@ -35,6 +41,7 @@ const schema = Yup.object().shape({
 
 export function SignIn() {
   const theme = useTheme();
+  const navigation = useNavigation<SignInScreenProp['navigation']>();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -52,6 +59,10 @@ export function SignIn() {
         )
       }
     }
+  }
+
+  function handleNewAccount() {
+    navigation.navigate('SignUpFirstStep');
   }
 
   return (
@@ -97,12 +108,13 @@ export function SignIn() {
             <Footer>
               <Button
                 title="Login"
+                disabled={!email || !password}
                 onPress={handleSignIn}
               />
               <ButtonSpace />
               <Button
                 title="Criar conta gratuita"
-                onPress={() => {}}
+                onPress={handleNewAccount}
                 color={theme.colors.background_secondary}
                 light
               />

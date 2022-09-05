@@ -2,12 +2,12 @@ import { useRef, useState } from "react";
 import { FlatList, ViewToken } from "react-native";
 
 import { BackButton } from "../BackButton";
+import { Bullet } from "../Bullet";
 
 import {
   Container,
   Header,
   ImageIndexes,
-  ImageIndex,
   CarImageWrapper,
   CarImage,
 } from "./styles";
@@ -39,7 +39,7 @@ export function ImageSlider({ imagesUrl, handleGoBack }: Props) {
         <ImageIndexes>
           {
             imagesUrl.map((_, idx) => (
-              <ImageIndex
+              <Bullet
                 key={String(idx)}
                 active={idx === imageIndex}
               />
