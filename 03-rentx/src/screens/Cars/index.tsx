@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -29,20 +29,30 @@ export function Cars() {
   const [isFetchingCars, setIsFetchingCars] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchCars() {
       try {
         const response = await api.get('/cars');
 
-        setCars(response.data);
+        if (isMounted) {
+          setCars(response.data);
+        }
       } catch(err) {
         console.log(err);
         Alert.alert("Erro inesperado ao buscar carros")
       } finally {
-        setIsFetchingCars(false);
+        if (isMounted) {
+          setIsFetchingCars(false);
+        }
       }
     }
+    
+    fetchCars();
 
-    fetchCars()
+    return () => {
+      isMounted = false;
+    }
   }, []);
 
   function handleShowCarDetails(car: CarDTO) {

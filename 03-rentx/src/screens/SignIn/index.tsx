@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   StatusBar,
@@ -16,7 +16,6 @@ import { PasswordInput } from "../../components/PasswordInput";
 
 import { useAuth } from "../../contexts/AuthContext";
 import { NonAuthStackScreenProp } from '../../routes/nonAuth.stack.routes';
-import { database } from '../../database';
 
 import {
   Container,
@@ -67,16 +66,6 @@ export function SignIn() {
   function handleNewAccount() {
     navigation.navigate('SignUpFirstStep');
   }
-
-  useEffect(() => {
-    async function loadData() {
-      const usersCollection = database.get('users');
-      const users = await usersCollection.query().fetch();
-      console.log(users);
-    }
-
-    loadData();
-  }, []);
 
   return (
     <>

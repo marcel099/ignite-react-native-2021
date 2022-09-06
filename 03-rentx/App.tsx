@@ -1,5 +1,6 @@
-import 'intl';
-import 'intl/locale-data/jsonp/pt-BR';
+import "intl";
+import "intl/locale-data/jsonp/pt-BR";
+import React from "react";
 import { useFonts } from "expo-font";
 import {
   Inter_400Regular,
@@ -10,6 +11,7 @@ import {
   Archivo_500Medium,
   Archivo_600SemiBold,
 } from "@expo-google-fonts/archivo";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemeProvider } from "styled-components/native";
 
 import { theme } from "./src/global/styles/theme"
@@ -32,7 +34,9 @@ export function App() {
   return (
     <ThemeProvider theme={theme}>
       <AppProvider>
-        <Routes />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Routes />
+        </GestureHandlerRootView>
       </AppProvider>
     </ThemeProvider>
   );
