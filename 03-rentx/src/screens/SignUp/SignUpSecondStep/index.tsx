@@ -17,6 +17,7 @@ import { PasswordInput } from "../../../components/PasswordInput";
 import { Button } from "../../../components/Button";
 
 import { AppStackParamList } from "../../../routes/stack.routes";
+import { api } from "../../../services/api";
 
 import {
   Container,
@@ -60,6 +61,13 @@ export function SignUpSecondStep() {
       const data = { password, repeatedPassword };
       await schema.validate(data);
 
+      await api.post('/users', {
+        name: user.name,
+        email: user.email,
+        driver_license: user.driverLicense,
+        password,
+      });
+
       navigation.navigate('Confirmation', {
         title: 'Conta criada!',
         message: `Agora é só fazer login\ne aproveitar.`,
@@ -70,6 +78,7 @@ export function SignUpSecondStep() {
         Alert.alert('Opa', error.message);
       } else {
         Alert.alert('Erro inesperado');
+        console.log(error);
       }
     }
   }
