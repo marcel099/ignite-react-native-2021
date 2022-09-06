@@ -7,7 +7,6 @@ import {
   Alert,
 } from "react-native";
 import { useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import * as Yup from "yup";
 import { useTheme } from "styled-components";
 
@@ -16,7 +15,7 @@ import { Input } from "../../components/Input";
 import { PasswordInput } from "../../components/PasswordInput";
 
 import { useAuth } from "../../contexts/AuthContext";
-import { AppStackParamList } from '../../routes/stack.routes';
+import { NonAuthStackScreenProp } from '../../routes/nonAuth.stack.routes';
 
 import {
   Container,
@@ -29,8 +28,6 @@ import {
   ButtonSpace,
 } from "./styles";
 
-type SignInScreenProp = StackScreenProps<AppStackParamList, 'SignIn'>;
-
 const schema = Yup.object().shape({
   email: Yup.string()
     .required('E-mail obrigatório')
@@ -42,7 +39,8 @@ const schema = Yup.object().shape({
 
 export function SignIn() {
   const theme = useTheme();
-  const navigation = useNavigation<SignInScreenProp['navigation']>();
+  const navigation =
+    useNavigation<NonAuthStackScreenProp<'SignIn'>['navigation']>();
   const { signIn } = useAuth();
   
   const [email, setEmail] = useState('');

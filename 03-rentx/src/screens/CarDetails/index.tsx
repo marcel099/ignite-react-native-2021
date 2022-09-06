@@ -1,6 +1,5 @@
 import { StatusBar, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -16,7 +15,7 @@ import { Button } from "../../components/Button";
 import { ImageSlider } from "../../components/ImageSlider";
 
 import { getAccessoryIcon } from '../../global/utils/getAccessoryIcon';
-import { AppStackParamList } from "../../routes/stack.routes";
+import { AppHomeStackScreenProp } from "../../routes/appHome.stack.routes";
 import { formatNumberToCurrency } from '../../utils/formatters';
 
 import {
@@ -34,11 +33,11 @@ import {
   Footer,
 } from "./styles";
 
-type CarDetailsScreenProp = StackScreenProps<AppStackParamList, 'CarDetails'>;
-
 export function CarDetails() {
-  const navigation = useNavigation<CarDetailsScreenProp['navigation']>();
-  const route = useRoute<CarDetailsScreenProp['route']>();
+  const navigation =
+    useNavigation<AppHomeStackScreenProp<'CarDetails'>['navigation']>();
+  const route =
+    useRoute<AppHomeStackScreenProp<'CarDetails'>['route']>();
   const { car } = route.params;
   const theme = useTheme();
 

@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
-import { Alert, StatusBar } from "react-native";
+import { useState } from "react";
+import { StatusBar } from "react-native";
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import { useTheme } from "styled-components";
 import { format } from "date-fns";
 
@@ -15,7 +14,7 @@ import {
   getPlatformDate,
   MarkedDateProps
 } from "../../components/Calendar";
-import { AppStackParamList } from "../../routes/stack.routes";
+import { AppHomeStackScreenProp } from "../../routes/appHome.stack.routes";
 
 import {
   Container,
@@ -29,8 +28,6 @@ import {
   Footer,
 } from "./styles";
 
-type SchedulingScreenProp = StackScreenProps<AppStackParamList, 'Scheduling'>;
-
 interface RentalPeriod {
   formattedStart: string;
   formattedEnd: string;
@@ -38,8 +35,11 @@ interface RentalPeriod {
 
 export function Scheduling() {
   const theme = useTheme();
-  const navigation = useNavigation<SchedulingScreenProp['navigation']>();
-  const route = useRoute<SchedulingScreenProp['route']>();
+
+  const navigation =
+    useNavigation<AppHomeStackScreenProp<'Scheduling'>['navigation']>();
+  const route =
+    useRoute<AppHomeStackScreenProp<'Scheduling'>['route']>();
   const { car } = route.params;
 
   const [

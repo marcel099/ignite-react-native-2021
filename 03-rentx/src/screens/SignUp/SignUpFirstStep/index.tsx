@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { StackScreenProps } from "@react-navigation/stack";
 import { useTheme } from "styled-components";
 import * as Yup from "yup";
 
@@ -16,7 +15,7 @@ import { Bullet } from "../../../components/Bullet";
 import { Input } from "../../../components/Input";
 import { Button } from "../../../components/Button";
 
-import { AppStackParamList } from "../../../routes/stack.routes";
+import { NonAuthStackScreenProp } from '../../../routes/nonAuth.stack.routes';
 
 import {
   Container,
@@ -28,9 +27,6 @@ import {
   FormTitle,
   InputSpace,
 } from "./styles";
-
-type SignUpFirstStepScreenProp =
-  StackScreenProps<AppStackParamList, 'SignUpFirstStep'>;
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -45,7 +41,7 @@ const schema = Yup.object().shape({
 export function SignUpFirstStep() {
   const theme = useTheme();
   const navigation =
-    useNavigation<SignUpFirstStepScreenProp['navigation']>();
+    useNavigation<NonAuthStackScreenProp<'SignUpFirstStep'>['navigation']>();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

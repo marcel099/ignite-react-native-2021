@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Alert, FlatList, StatusBar } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { StackScreenProps } from "@react-navigation/stack";
 import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "styled-components";
 
@@ -9,7 +7,6 @@ import { CarsLoader } from "../../components/CarsLoader";
 import { BackButton } from "../../components/BackButton";
 
 import { CarDTO } from "../../global/dtos/CarDTO";
-import { AppStackParamList } from "../../routes/stack.routes";
 import { api } from "../../services/api";
 
 import {
@@ -29,8 +26,6 @@ import {
 } from "./styles";
 import { CarCard } from "../../components/CarCard";
 
-type MyCarsScreenProp = StackScreenProps<AppStackParamList, 'MyCars'>;
-
 interface ScheduleDTO {
   id: string;
   user_id: string;
@@ -41,17 +36,9 @@ interface ScheduleDTO {
 
 export function MyCars() {
   const theme = useTheme();
-  const navigation = 
-    useNavigation<MyCarsScreenProp['navigation']>();
-  // const route = 
-  //   useRoute<SchedulingDetailsScreenProp['route']>();
 
   const [cars, setCars] = useState<ScheduleDTO[]>([]);
   const [isFetchingCars, setIsFetchingCars] = useState(true);
-
-  function handleGoBackHome() {
-    navigation.pop();
-  }
 
   useEffect(() => {
     async function fetchCars() {
@@ -81,7 +68,7 @@ export function MyCars() {
         <Header>
           <BackButton
             color={theme.colors.shape}
-            onPress={handleGoBackHome}
+            onPress={() => {}}
           />
 
           <Title>

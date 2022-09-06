@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Alert, StatusBar } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import { RFValue } from "react-native-responsive-fontsize";
 import { useTheme } from "styled-components";
 import { Feather } from "@expo/vector-icons";
@@ -13,7 +12,7 @@ import { getPlatformDate } from '../../components/Calendar';
 import { ImageSlider } from "../../components/ImageSlider";
 
 import { getAccessoryIcon } from '../../global/utils/getAccessoryIcon'
-import { AppStackParamList } from "../../routes/stack.routes";
+import { AppHomeStackScreenProp } from "../../routes/appHome.stack.routes";
 import { formatNumberToCurrency } from '../../utils/formatters';
 
 import { api } from '../../services/api';
@@ -43,8 +42,6 @@ import {
   Footer,
 } from "./styles";
 
-type SchedulingDetailsScreenProp = StackScreenProps<AppStackParamList, 'SchedulingDetails'>;
-
 interface RentalPeriod {
   formattedStart: string;
   formattedEnd: string;
@@ -53,9 +50,9 @@ interface RentalPeriod {
 export function SchedulingDetails() {
   const theme = useTheme();
   const navigation = 
-    useNavigation<SchedulingDetailsScreenProp['navigation']>();
+    useNavigation<AppHomeStackScreenProp<'SchedulingDetails'>['navigation']>();
   const route = 
-    useRoute<SchedulingDetailsScreenProp['route']>();
+    useRoute<AppHomeStackScreenProp<'SchedulingDetails'>['route']>();
   const { car, dates } = route.params;
 
   const [
@@ -96,7 +93,7 @@ export function SchedulingDetails() {
       navigation.navigate('Confirmation', {
         title: 'Carro alugado!',
         message: `Agora você só precisa ir\naté a concessionária da RENTX\npegar o seu automóvel.`,
-        nextScreenName: 'Home'
+        nextScreenName: 'Cars'
       });
     } catch (err) {
       console.log(err)

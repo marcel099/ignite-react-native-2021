@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -13,16 +12,15 @@ import Animated, {
 
 import BrandSvg from '../../assets/brand.svg';
 import LogoSvg from '../../assets/logo.svg';
-import { AppStackParamList } from '../../routes/stack.routes';
+import { NonAuthStackScreenProp } from '../../routes/nonAuth.stack.routes';
 
 import {
   Container,
 } from "./styles";
 
-type SplashScreenProp = StackScreenProps<AppStackParamList, 'Splash'>;
-
 export function Splash() {
-  const navigation = useNavigation<SplashScreenProp['navigation']>();
+  const navigation =
+    useNavigation<NonAuthStackScreenProp<'Confirmation'>['navigation']>();
 
   const splashAnimation = useSharedValue(0);
 

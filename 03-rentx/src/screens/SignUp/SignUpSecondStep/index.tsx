@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { StackScreenProps } from "@react-navigation/stack";
 import { useTheme } from "styled-components";
 import * as Yup from 'yup';
 
@@ -16,7 +15,7 @@ import { Bullet } from "../../../components/Bullet";
 import { PasswordInput } from "../../../components/PasswordInput";
 import { Button } from "../../../components/Button";
 
-import { AppStackParamList } from "../../../routes/stack.routes";
+import { NonAuthStackScreenProp } from '../../../routes/nonAuth.stack.routes';
 import { api } from "../../../services/api";
 
 import {
@@ -30,9 +29,6 @@ import {
   InputSpace,
 } from "./styles";
 
-type SignUpSecondStepScreenProp =
-  StackScreenProps<AppStackParamList, 'SignUpSecondStep'>;
-
 const schema = Yup.object().shape({
   password: Yup.string()
     .required('Senha obrigatória')
@@ -45,9 +41,9 @@ const schema = Yup.object().shape({
 export function SignUpSecondStep() {
   const theme = useTheme();
   const navigation =
-    useNavigation<SignUpSecondStepScreenProp['navigation']>();
+    useNavigation<NonAuthStackScreenProp<'SignUpSecondStep'>['navigation']>();
   const { params: { user } } =
-    useRoute<SignUpSecondStepScreenProp['route']>();
+    useRoute<NonAuthStackScreenProp<'SignUpSecondStep'>['route']>();
 
   const [password, setPassword] = useState('');
   const [repeatedPassword, setRepeatedPassword] = useState('');
