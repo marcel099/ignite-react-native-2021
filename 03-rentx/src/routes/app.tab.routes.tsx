@@ -1,3 +1,4 @@
+import React from 'react';
 import { Platform } from 'react-native';
 import { NavigatorScreenParams } from '@react-navigation/native';
 import {
@@ -10,6 +11,7 @@ import CarSvg from '../assets/car.svg';
 import PeopleSvg from '../assets/people.svg';
 
 import { MyCars } from "../screens/MyCars";
+import { Profile } from '../screens/Profile';
 import {
   AppHomeStackParamList,
   AppHomeStackRoutes
@@ -50,20 +52,20 @@ export function AppTabRoutes() {
         }}
       />
       <Screen
-        name="Profile"
-        component={AppHomeStackRoutes}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <PeopleSvg width={24} height={24} color={color} />
-          )
-        }}
-      />
-      <Screen
         name="MyCars"
         component={MyCars}
         options={{
           tabBarIcon: ({ color }) => (
             <CarSvg width={24} height={24} color={color} />
+          )
+        }}
+      />
+      <Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <PeopleSvg width={24} height={24} color={color} />
           )
         }}
       />
