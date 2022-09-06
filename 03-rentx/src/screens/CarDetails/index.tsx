@@ -104,7 +104,7 @@ export function CarDetails() {
           <Header>
             <Animated.View style={sliderCarsStyleAnimation}>
               <ImageSlider
-                imagesUrl={car.photos}
+                images={car.photos}
                 handleGoBack={handleGoBackHome}
               />
             </Animated.View>
@@ -128,8 +128,8 @@ export function CarDetails() {
             </Description>
 
             <Rent>
-              <Period>{car.rent.period}</Period>
-              <Price>{formatNumberToCurrency(car.rent.price)}</Price>
+              <Period>{car.period}</Period>
+              <Price>{formatNumberToCurrency(car.price)}</Price>
             </Rent>
           </Details>
 
@@ -137,7 +137,7 @@ export function CarDetails() {
             {
               car.accessories.map(accessory => (
                 <Accessory
-                  key={accessory.type}
+                  key={accessory.id}
                   name={accessory.name}
                   icon={getAccessoryIcon(accessory.type)}
                 />

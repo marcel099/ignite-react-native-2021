@@ -18,11 +18,14 @@ interface ChangeImageProps {
 }
 
 interface Props {
-  imagesUrl: string[];
+  images: {
+    id: string;
+    photo: string;
+  }[];
   handleGoBack: () => void;
 }
 
-export function ImageSlider({ imagesUrl, handleGoBack }: Props) {
+export function ImageSlider({ images, handleGoBack }: Props) {
   const [imageIndex, setImageIndex] = useState(0);
 
   const indexChanged = useRef((info: ChangeImageProps) => {
@@ -38,9 +41,9 @@ export function ImageSlider({ imagesUrl, handleGoBack }: Props) {
         />
         <ImageIndexes>
           {
-            imagesUrl.map((_, idx) => (
+            images.map((image, idx) => (
               <Bullet
-                key={String(idx)}
+                key={image.id}
                 active={idx === imageIndex}
               />
             ))
@@ -49,12 +52,12 @@ export function ImageSlider({ imagesUrl, handleGoBack }: Props) {
       </Header>
       
       <FlatList
-        data={imagesUrl}
-        keyExtractor={key => key}
-        renderItem={({ item: imageUrl }) => (
+        data={images}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
           <CarImageWrapper>
             <CarImage
-              source={{ uri: imageUrl }}
+              source={{ uri: item.photo }}
               resizeMode="contain"
             />
           </CarImageWrapper>

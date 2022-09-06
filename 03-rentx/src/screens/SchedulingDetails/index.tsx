@@ -120,7 +120,7 @@ export function SchedulingDetails() {
     })
   }, []);
 
-  const rentTotal = car.rent.price * dates.length;
+  const rentTotal = car.price * dates.length;
 
   return (
     <>
@@ -132,7 +132,7 @@ export function SchedulingDetails() {
       <Container>
         <Header>
           <ImageSlider
-            imagesUrl={car.photos}
+            images={car.photos}
             handleGoBack={handleGoBackScheduling}
           />
         </Header> 
@@ -145,8 +145,8 @@ export function SchedulingDetails() {
             </Description>
 
             <Rent>
-              <Period>{car.rent.period}</Period>
-              <Price>{formatNumberToCurrency(car.rent.price)}</Price>
+              <Period>{car.period}</Period>
+              <Price>{formatNumberToCurrency(car.price)}</Price>
             </Rent>
           </Details>
 
@@ -154,7 +154,7 @@ export function SchedulingDetails() {
             {
               car.accessories.map(accessory => (
                 <Accessory
-                  key={accessory.type}
+                  key={accessory.id}
                   name={accessory.name}
                   icon={getAccessoryIcon(accessory.type)}
                 />
@@ -192,7 +192,7 @@ export function SchedulingDetails() {
             <RentalPriceLabel>TOTAL</RentalPriceLabel>
             <RentalPriceDetails>
               <RentalPriceQuota>
-                {formatNumberToCurrency(car.rent.price)} x{dates.length} diárias
+                {formatNumberToCurrency(car.price)} x{dates.length} diárias
               </RentalPriceQuota>
               <RentalPricetotal>
                 {formatNumberToCurrency(rentTotal)}

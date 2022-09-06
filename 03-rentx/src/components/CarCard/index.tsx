@@ -26,10 +26,8 @@ export function CarCard({
     brand,
     name,
     thumbnail,
-    rent: {
-      period,
-      price,
-    },
+    period,
+    price,
     fuel_type,
   },
   ...rest
