@@ -15,6 +15,7 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Input";
 import { PasswordInput } from "../../components/PasswordInput";
 
+import { useAuth } from "../../contexts/AuthContext";
 import { AppStackParamList } from '../../routes/stack.routes';
 
 import {
@@ -42,6 +43,7 @@ const schema = Yup.object().shape({
 export function SignIn() {
   const theme = useTheme();
   const navigation = useNavigation<SignInScreenProp['navigation']>();
+  const { signIn } = useAuth();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -49,6 +51,8 @@ export function SignIn() {
   async function handleSignIn() {
     try {
       await schema.validate({ email, password });
+
+      signIn({ email, password });
     } catch(error) {
       if (error instanceof Yup.ValidationError) {
         Alert.alert('Opa', error.message);
