@@ -63,7 +63,21 @@ export function Profile() {
 
   async function handleSignOut() {
     try {
-      await signOut();
+      Alert.alert(
+        'Tem certeza?',
+        'Lembre-se que, se você sair, precisará de acesso à internet para entrar novamente.',
+        [
+          {
+            text: 'Cancelar',
+            onPress: () => {},
+            style: 'cancel',
+          },
+          {
+            text: 'Sair',
+            onPress: () => signOut(),
+          }
+        ]
+      );
     } catch (error) {
       Alert.alert(
         'Erro ao desconectar',
