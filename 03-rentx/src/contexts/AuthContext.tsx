@@ -28,6 +28,7 @@ interface SignInCredentials {
 interface AuthContextData {
   user: UserDTO | null;
   signIn: (data: SignInCredentials) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextData);
@@ -62,25 +63,44 @@ export function AuthContextProvider({
 
       const usersCollection = database.get<User>('users');
       await database.write(async () => {
-        await usersCollection.create(( newUser ) => {
+        const newUser = await usersCollection.create(( newUser ) => {
           newUser.user_id = id;
           newUser.name = name;
           newUser.email = email;
           newUser.driver_license = driver_license;
           newUser.avatar = avatar;
           newUser.token = token;
-        })
+        });
+
+        setUser({
+          token,
+          id: newUser.id,
+          user_id: id,
+          name,
+          email,
+          driver_license,
+          avatar,
+        });
       });
-      
-      setUser({
-        token,
-        id,
-        user_id: '',
-        name,
-        email,
-        driver_license,
-        avatar,
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function signOut() {
+    try {
+      if (user === null) {
+        throw new Error('Não é possível desconectar um usuário não conectado');
+      }
+
+      const userCollection = database.get<User>('users');
+      await database.write(async () => {
+        const userSelected = await userCollection.find(user.id);
+
+        await userSelected.destroyPermanently();
       });
+
+      setUser(null);
     } catch (error) {
       throw error;
     }
@@ -105,8 +125,9 @@ export function AuthContextProvider({
 
   return (
     <AuthContext.Provider value={{
-      signIn,
       user: user,
+      signIn,
+      signOut,
     }}>
       { children }
     </AuthContext.Provider>

@@ -4,6 +4,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   StatusBar,
+  Alert,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from 'styled-components';
@@ -36,7 +37,7 @@ type OptionTypes = 'dataEdit' | 'passwordEdit'
 export function Profile() {
   const theme = useTheme();
 
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   const [currentOption, setCurrentOption] =
     useState<OptionTypes>('dataEdit');
@@ -45,14 +46,18 @@ export function Profile() {
     const [driverLicense, setDriverLicense] =
       useState(user?.driver_license ?? '');
     const [avatarUri, setAvatarUri] =
-      useState(user?.avatar ?? 'https://github.com/marcel099.png');
+      useState(user?.avatar ?? '');
 
   function handleBack() {
 
   }
 
-  function handleSignOut() {
-
+  async function handleSignOut() {
+    try {
+      await signOut();
+    } catch (error) {
+      Alert.alert('Um erro ocorreu');
+    }
   }
 
   function handleOptionChange(optionSelected: OptionTypes) {
