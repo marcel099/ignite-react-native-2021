@@ -5,6 +5,7 @@ import {
   Keyboard,
   StatusBar,
 } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from 'styled-components';
 import { Feather } from '@expo/vector-icons';
 
@@ -40,6 +41,12 @@ export function Profile() {
   const [currentOption, setCurrentOption] =
     useState<OptionTypes>('dataEdit');
 
+    const [name, setName] = useState(user?.name ?? '');
+    const [driverLicense, setDriverLicense] =
+      useState(user?.driver_license ?? '');
+    const [avatarUri, setAvatarUri] =
+      useState(user?.avatar ?? 'https://github.com/marcel099.png');
+
   function handleBack() {
 
   }
@@ -50,6 +57,23 @@ export function Profile() {
 
   function handleOptionChange(optionSelected: OptionTypes) {
     setCurrentOption(optionSelected);
+  }
+
+  async function handleSelectAvatar() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (result.cancelled) {
+      return;
+    }
+
+    if (result.uri) {
+      setAvatarUri(result.uri);
+    }
   }
 
   return (
@@ -80,8 +104,10 @@ export function Profile() {
                 </LogoutButton>
               </HeaderTop>
               <PhotoContainer>
-                <Photo source={{ uri: 'https://github.com/marcel099.png' }} />
-                <ChangePhotoButton onPress={() => {}}>
+                {
+                  !!avatarUri && <Photo source={{ uri: avatarUri }} />
+                }
+                <ChangePhotoButton onPress={handleSelectAvatar}>
                   <Feather
                     name="camera"
                     size={24}
@@ -121,6 +147,7 @@ export function Profile() {
                       autoCapitalize="sentences"
                       autoCorrect={false}
                       defaultValue={user?.name ?? ''}
+                      onChangeText={setName}
                     />
                     <Input
                       iconName="mail"
@@ -132,6 +159,7 @@ export function Profile() {
                       placeholder="CNH"
                       keyboardType="numeric"
                       defaultValue={user?.driver_license ?? ''}
+                      onChangeText={setDriverLicense}
                     />
                   </Section>
                 ) : (
