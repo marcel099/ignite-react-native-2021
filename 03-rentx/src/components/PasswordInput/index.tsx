@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { TextInputProps } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import { useTheme } from "styled-components";
@@ -51,6 +51,8 @@ export function PasswordInput({ iconName, ...rest }: Props) {
 
       <InputText
         isFocused={isFocused}
+        autoCapitalize="none"
+        autoCorrect={false}
         secureTextEntry={!isPasswordVisible}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}

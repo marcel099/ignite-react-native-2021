@@ -4,7 +4,6 @@ import { RFValue } from "react-native-responsive-fontsize";
 import styled from "styled-components/native";
 
 export const Container = styled.View`
-  flex: 1;
   background-color: ${({ theme }) => theme.colors.background_primary};
 `;
 
@@ -64,3 +63,44 @@ export const ChangePhotoButton = styled(RectButton)`
   bottom: ${RFValue(10)}px;
   right: ${RFValue(10)}px;
 `;
+
+export const Content = styled.View`
+  padding: 0 ${RFValue(24)}px;
+  margin-top: ${RFValue(122)}px;
+`;
+
+export const Options = styled.View`
+  flex-direction: row;
+  justify-content: space-evenly;
+
+  margin-bottom: ${RFValue(24)}px;
+
+  border-bottom-width: ${RFValue(1)}px;
+  border-bottom-color: ${({ theme }) => theme.colors.line};
+`;
+
+interface OptionProps {
+  active: boolean;
+}
+
+export const Option = styled.TouchableOpacity<OptionProps>`
+  padding-bottom: ${RFValue(14)}px;
+
+  border-bottom-width: ${RFValue(2)}px;
+  border-bottom-color: ${({ theme, active }) =>
+    active ? theme.colors.main : 'transparent'};
+`;
+
+interface OptionTitleProps {
+  active: boolean;
+}
+
+export const OptionTitle = styled.Text<OptionTitleProps>`
+  font-size: ${RFValue(20)}px;
+  font-family: ${({ theme, active }) =>
+    active ? theme.fonts.secondary_600 : theme.fonts.secondary_500};
+  color: ${({ theme, active }) =>
+    active ? theme.colors.header : theme.colors.text_details };
+`;
+
+export const Section = styled.View``;

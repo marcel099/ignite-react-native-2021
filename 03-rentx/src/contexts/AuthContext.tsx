@@ -13,6 +13,7 @@ import { User } from "../database/models/User";
 interface UserDTO {
   id: string;
   user_id: string;
+  name: string;
   email: string;
   driver_license: string;
   avatar: string;
@@ -75,6 +76,7 @@ export function AuthContextProvider({
         token,
         id,
         user_id: '',
+        name,
         email,
         driver_license,
         avatar,

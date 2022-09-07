@@ -111,8 +111,6 @@ export function SignUpSecondStep() {
               <PasswordInput
                 iconName="lock"
                 placeholder="Senha"
-                autoCorrect={false}
-                autoCapitalize="none"
                 onChangeText={setPassword}
                 value={password}
               />
@@ -120,8 +118,6 @@ export function SignUpSecondStep() {
               <PasswordInput
                 iconName="lock"
                 placeholder="Repetir senha"
-                autoCorrect={false}
-                autoCapitalize="none"
                 onChangeText={setRepeatedPassword}
                 value={repeatedPassword}
               />

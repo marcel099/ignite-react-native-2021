@@ -66,7 +66,8 @@ export function AppTabRoutes() {
         options={{
           tabBarIcon: ({ color }) => (
             <PeopleSvg width={24} height={24} color={color} />
-          )
+          ),
+          tabBarHideOnKeyboard: true,
         }}
       />
     </Navigator>
