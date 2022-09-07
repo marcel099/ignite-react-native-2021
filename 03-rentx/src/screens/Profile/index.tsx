@@ -9,8 +9,10 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { useTheme } from 'styled-components';
 import { Feather } from '@expo/vector-icons';
+import * as Yup from 'yup';
 
 import { BackButton } from '../../components/BackButton';
+import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { PasswordInput } from '../../components/PasswordInput';
 
@@ -34,10 +36,17 @@ import {
 
 type OptionTypes = 'dataEdit' | 'passwordEdit'
 
+const schema = Yup.object().shape({
+  name: Yup.string()
+    .required('Nome obrigatório'),
+  driverLicense: Yup.string()
+    .required('CNH obrigatória'),
+})
+
 export function Profile() {
   const theme = useTheme();
 
-  const { user, signOut } = useAuth();
+  const { updateUser, user, signOut } = useAuth();
 
   const [currentOption, setCurrentOption] =
     useState<OptionTypes>('dataEdit');
@@ -56,7 +65,10 @@ export function Profile() {
     try {
       await signOut();
     } catch (error) {
-      Alert.alert('Um erro ocorreu');
+      Alert.alert(
+        'Erro ao desconectar',
+        'Ocorreu um erro inesperado ao tentar se desconectar'
+      );
     }
   }
 
@@ -78,6 +90,35 @@ export function Profile() {
 
     if (result.uri) {
       setAvatarUri(result.uri);
+    }
+  }
+
+  async function handleProfileUpdate() {
+    try {
+      const data = { name, driverLicense };
+
+      await schema.validate(data);
+
+      await updateUser({
+        id: user!.id,
+        user_id: user!.user_id,
+        email: user!.email,
+        name,
+        driver_license: driverLicense,
+        avatar: avatarUri,
+        token: user!.token,
+      });
+
+      Alert.alert('Perfil atualizado!');
+    } catch (error) {
+      if (error instanceof Yup.ValidationError) {
+        Alert.alert('Opa', error.message);
+      } else {
+        Alert.alert(
+          'Erro ao atualizar',
+          'Não foi possível atualizar o perfil'
+        );
+      }
     }
   }
 
@@ -184,6 +225,11 @@ export function Profile() {
                   </Section>
                 )
               }
+
+              <Button
+                title="Salvar alterações"
+                onPress={handleProfileUpdate}
+              />
             </Content>
           </Container>
         </TouchableWithoutFeedback>
