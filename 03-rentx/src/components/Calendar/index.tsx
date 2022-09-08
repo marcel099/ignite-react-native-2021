@@ -1,3 +1,4 @@
+import React from 'react';
 import { Feather } from "@expo/vector-icons";
 import { 
   Calendar as CustomCalendar,

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { StatusBar } from "react-native";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useTheme } from "styled-components";

@@ -17,6 +17,7 @@ import { Input } from '../../components/Input';
 import { PasswordInput } from '../../components/PasswordInput';
 
 import { useAuth } from '../../contexts/AuthContext';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 import {
   Container,
@@ -46,6 +47,8 @@ const schema = Yup.object().shape({
 export function Profile() {
   const theme = useTheme();
 
+  const netInfo = useNetInfo();
+
   const { updateUser, user, signOut } = useAuth();
 
   const [currentOption, setCurrentOption] =
@@ -74,7 +77,7 @@ export function Profile() {
           },
           {
             text: 'Sair',
-            onPress: () => signOut(),
+            onPress: async () => await signOut(),
           }
         ]
       );
@@ -87,7 +90,14 @@ export function Profile() {
   }
 
   function handleOptionChange(optionSelected: OptionTypes) {
-    setCurrentOption(optionSelected);
+    if(!netInfo.isConnected && optionSelected === 'passwordEdit') {
+      Alert.alert(
+        'Você está offline',
+        'Para mudar a senha é necessário conectar-se à internet'
+      );
+    } else { 
+      setCurrentOption(optionSelected);
+    }
   }
 
   async function handleSelectAvatar() {

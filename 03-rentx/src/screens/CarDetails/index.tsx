@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { StatusBar, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Animated, {
@@ -7,6 +8,7 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
+import { useNetInfo } from '@react-native-community/netinfo';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { useTheme } from 'styled-components';
 
@@ -17,6 +19,8 @@ import { ImageSlider } from "../../components/ImageSlider";
 import { getAccessoryIcon } from '../../global/utils/getAccessoryIcon';
 import { AppHomeStackScreenProp } from "../../routes/appHome.stack.routes";
 import { formatNumberToCurrency } from '../../utils/formatters';
+import { CarDTO } from '../../global/dtos/CarDTO';
+import { api } from '../../services/api';
 
 import {
   Container,
@@ -31,6 +35,7 @@ import {
   Accessories,
   About,
   Footer,
+  OfflineInfo,
 } from "./styles";
 
 export function CarDetails() {
@@ -40,6 +45,9 @@ export function CarDetails() {
     useRoute<AppHomeStackScreenProp<'CarDetails'>['route']>();
   const { car } = route.params;
   const theme = useTheme();
+  const netInfo = useNetInfo();
+
+  const [updatedCar, setUpdatedCar] = useState<CarDTO | null>(null);
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(event => {
@@ -85,6 +93,17 @@ export function CarDetails() {
     navigation.navigate('Scheduling', { car });
   }
 
+  useEffect(() => {
+    async function fetchUpdatedCar() {
+      const response = await api.get(`/cars/${car.id}`)
+      setUpdatedCar(response.data);
+    }
+
+    if (netInfo.isConnected) {
+      fetchUpdatedCar();
+    }
+  }, [netInfo.isConnected])
+
   return (
     <>
       <StatusBar
@@ -103,7 +122,11 @@ export function CarDetails() {
           <Header>
             <Animated.View style={sliderCarsStyleAnimation}>
               <ImageSlider
-                images={car.photos}
+                images={
+                  !!updatedCar?.photos
+                  ? updatedCar.photos
+                  : [{id: car.thumbnail, photo: car.thumbnail}]
+                }
                 handleGoBack={handleGoBackHome}
               />
             </Animated.View>
@@ -128,21 +151,31 @@ export function CarDetails() {
 
             <Rent>
               <Period>{car.period}</Period>
-              <Price>{formatNumberToCurrency(car.price)}</Price>
+              <Price>
+                {
+                  netInfo.isConnected
+                  ? formatNumberToCurrency(car.price)
+                  : 'R$ ...'
+                }
+              </Price>
             </Rent>
           </Details>
 
-          <Accessories>
-            {
-              car.accessories.map(accessory => (
-                <Accessory
-                  key={accessory.id}
-                  name={accessory.name}
-                  icon={getAccessoryIcon(accessory.type)}
-                />
-              ))
-            }
-          </Accessories>
+          {
+            updatedCar?.accessories && (
+              <Accessories>
+                {
+                  updatedCar?.accessories.map(accessory => (
+                    <Accessory
+                      key={accessory.id}
+                      name={accessory.name}
+                      icon={getAccessoryIcon(accessory.type)}
+                    />
+                  ))
+                }
+              </Accessories>
+            )
+          }
 
           <About>{ car.about }</About>
         </Animated.ScrollView>
@@ -151,7 +184,16 @@ export function CarDetails() {
           <Button
             title="Escolher período de aluguel"
             onPress={handleShowScheduling}
+            disabled={netInfo.isConnected === false}
           />
+
+          {
+            netInfo.isConnected === false && (
+              <OfflineInfo>
+                Conecte-se à internet para ver mais detalhes e agendar seu carro.
+              </OfflineInfo>
+            )
+          }
         </Footer>
       </Container>
     </>

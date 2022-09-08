@@ -33,8 +33,7 @@ const schema = Yup.object().shape({
     .required('E-mail obrigatório')
     .email('Digite um e-mail válido'),
   password: Yup.string()
-    .required('Senha obrigatória')
-    .min(8, 'A senha deve conter, no mínimo, 8 caracteres'),
+    .required('Senha obrigatória'),
 })
 
 export function SignIn() {
@@ -50,7 +49,7 @@ export function SignIn() {
     try {
       await schema.validate({ email, password });
 
-      signIn({ email, password });
+      await signIn({ email, password });
     } catch(error) {
       if (error instanceof Yup.ValidationError) {
         Alert.alert('Opa', error.message);

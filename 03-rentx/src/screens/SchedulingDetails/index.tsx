@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, StatusBar } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNetInfo } from '@react-native-community/netinfo';
 import { RFValue } from "react-native-responsive-fontsize";
 import { useTheme } from "styled-components";
 import { Feather } from "@expo/vector-icons";
@@ -11,6 +12,7 @@ import { Button } from "../../components/Button";
 import { getPlatformDate } from '../../components/Calendar';
 import { ImageSlider } from "../../components/ImageSlider";
 
+import { CarDTO } from '../../global/dtos/CarDTO';
 import { getAccessoryIcon } from '../../global/utils/getAccessoryIcon'
 import { AppHomeStackScreenProp } from "../../routes/appHome.stack.routes";
 import { formatNumberToCurrency } from '../../utils/formatters';
@@ -54,6 +56,7 @@ export function SchedulingDetails() {
   const route = 
     useRoute<AppHomeStackScreenProp<'SchedulingDetails'>['route']>();
   const { car, dates } = route.params;
+  const netInfo = useNetInfo();
 
   const [
     rentalPeriod,
@@ -63,6 +66,12 @@ export function SchedulingDetails() {
     isSendingSchedule,
     setIsSendingSchedule
   ] = useState(false);
+  const [
+    updatedCar,
+    setUpdatedCar
+  ] = useState<CarDTO | null>(null);
+
+  const rentTotal = car.price * dates.length;
 
   function handleGoBackScheduling() {
     navigation.pop();
@@ -71,32 +80,22 @@ export function SchedulingDetails() {
   async function handleConfirmRental() {
     try {
       setIsSendingSchedule(true);
-      const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
 
-      const unavailable_dates = [
-        ...schedulesByCar.data.unavailable_dates,
-        ...dates,
-      ];
-
-      await api.post('schedules_byuser', {
+      await api.post('/rentals', {
         user_id: 1,
-        car,
-        startDate: rentalPeriod?.formattedStart,
-        endDate: rentalPeriod?.formattedEnd,
-      })
-
-      await api.put(`/schedules_bycars/${car.id}`, {
-        id: car.id,
-        unavailable_dates,
-      })
+        car_id: car.id,
+        start_date: new Date(dates[0]),
+        end_date: new Date(dates[dates.length - 1]),
+        total: rentTotal,
+      });
 
       navigation.navigate('Confirmation', {
         title: 'Carro alugado!',
         message: `Agora você só precisa ir\naté a concessionária da RENTX\npegar o seu automóvel.`,
         nextScreenName: 'Cars'
       });
-    } catch (err) {
-      console.log(err)
+    } catch (error) {
+      console.log(error)
       Alert.alert("Não foi possível confirmar o agendamento");
     } finally {
       setIsSendingSchedule(false);
@@ -117,7 +116,16 @@ export function SchedulingDetails() {
     })
   }, []);
 
-  const rentTotal = car.price * dates.length;
+  useEffect(() => {
+    async function fetchUpdatedCar() {
+      const response = await api.get(`/cars/${car.id}`)
+      setUpdatedCar(response.data);
+    }
+
+    if (netInfo.isConnected) {
+      fetchUpdatedCar();
+    }
+  }, [netInfo.isConnected]);
 
   return (
     <>
@@ -129,7 +137,11 @@ export function SchedulingDetails() {
       <Container>
         <Header>
           <ImageSlider
-            images={car.photos}
+            images={
+              !!updatedCar?.photos
+              ? updatedCar.photos
+              : [{id: car.thumbnail, photo: car.thumbnail}]
+            }
             handleGoBack={handleGoBackScheduling}
           />
         </Header> 
@@ -147,17 +159,21 @@ export function SchedulingDetails() {
             </Rent>
           </Details>
 
-          <Accessories>
-            {
-              car.accessories.map(accessory => (
-                <Accessory
-                  key={accessory.id}
-                  name={accessory.name}
-                  icon={getAccessoryIcon(accessory.type)}
-                />
-              ))
-            }
-          </Accessories>
+          {
+            updatedCar?.accessories && (
+              <Accessories>
+                {
+                  updatedCar?.accessories.map(accessory => (
+                    <Accessory
+                      key={accessory.id}
+                      name={accessory.name}
+                      icon={getAccessoryIcon(accessory.type)}
+                    />
+                  ))
+                }
+              </Accessories>
+            )
+          }
 
           <RentalPeriod>
             <CalendarIcon>

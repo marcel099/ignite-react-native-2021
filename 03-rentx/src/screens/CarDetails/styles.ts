@@ -84,3 +84,12 @@ export const Footer = styled.View`
   
   background-color: ${({ theme }) => theme.colors.background_secondary};
 `;
+
+export const OfflineInfo = styled.Text`
+  font-size: ${RFValue(10)}px;
+  font-family: ${({ theme }) => theme.fonts.primary_400};
+  color: ${({ theme }) => theme.colors.main};
+  text-align: center;
+
+  margin-top: ${RFValue(8)}px;
+`;

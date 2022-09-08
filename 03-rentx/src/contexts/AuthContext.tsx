@@ -27,6 +27,7 @@ interface SignInCredentials {
 
 interface AuthContextData {
   user: UserDTO | null;
+  isLoadingUser: boolean;
   signIn: (data: SignInCredentials) => Promise<void>;
   signOut: () => Promise<void>;
   updateUser: (userUpdateData: UserDTO) => Promise<void>;
@@ -42,6 +43,7 @@ export function AuthContextProvider({
   children
 }: AuthContextProviderProps) {
   const [user, setUser] = useState<UserDTO | null>(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   async function signIn({ email, password}: SignInCredentials) {
     try {
@@ -136,6 +138,8 @@ export function AuthContextProvider({
           `Bearer ${loadedUser.token}`;
         setUser(loadedUser);
       }
+
+      setIsLoadingUser(false);
     }
 
     loadUser();
@@ -144,6 +148,7 @@ export function AuthContextProvider({
   return (
     <AuthContext.Provider value={{
       user: user,
+      isLoadingUser,
       signIn,
       signOut,
       updateUser,

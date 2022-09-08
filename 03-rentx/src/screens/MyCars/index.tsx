@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Alert, FlatList, StatusBar } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { useTheme } from "styled-components";
 
 import { CarsLoader } from "../../components/CarsLoader";
 import { BackButton } from "../../components/BackButton";
+import { CarCard } from "../../components/CarCard";
 
-import { CarDTO } from "../../global/dtos/CarDTO";
+import { CarModelDTO } from "../../database/models/Car";
 import { api } from "../../services/api";
+import { formatDateToLocaleDate } from "../../utils/formatters";
 
 import {
   Container,
@@ -24,14 +27,12 @@ import {
   CarCardFooterPeriod,
   CarCardFooterDate,
 } from "./styles";
-import { CarCard } from "../../components/CarCard";
 
 interface ScheduleDTO {
   id: string;
-  user_id: string;
-  startDate: string;
-  endDate: string;
-  car: CarDTO;
+  start_date: string;
+  end_date: string;
+  car: CarModelDTO;
 }
 
 export function MyCars() {
@@ -40,14 +41,14 @@ export function MyCars() {
   const [cars, setCars] = useState<ScheduleDTO[]>([]);
   const [isFetchingCars, setIsFetchingCars] = useState(true);
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     async function fetchCars() {
       try {
-        const response = await api.get('/schedules_byuser?user_id=1');
+        const response = await api.get(`/rentals`);
 
         setCars(response.data);
-      } catch(err) {
-        console.log(err);
+      } catch(error) {
+        console.log(error);
         Alert.alert("Erro inesperado ao buscar carros")
       } finally {
         setIsFetchingCars(false);
@@ -55,7 +56,7 @@ export function MyCars() {
     }
 
     fetchCars()
-  }, []);
+  }, []));
 
   return (
     <>
@@ -99,13 +100,17 @@ export function MyCars() {
                 keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <CarCardWrapper>
+                  <CarCardWrapper key={item.id}>
                     <CarCard data={item.car} />
                     <CarCardFooter>
                       <CarCardFooterTitle>Período</CarCardFooterTitle>
                       <CarCardFooterPeriod>
                         <CarCardFooterDate>
-                          {item.startDate}
+                          {
+                            formatDateToLocaleDate(
+                              new Date(item.start_date)
+                            )
+                          }
                         </CarCardFooterDate>
                         <AntDesign
                           name="arrowright"
@@ -114,7 +119,11 @@ export function MyCars() {
                           style={{ marginHorizontal: 10 }}
                         />
                         <CarCardFooterDate>
-                          {item.endDate}
+                          {
+                            formatDateToLocaleDate(
+                              new Date(item.end_date)
+                            )
+                          }
                         </CarCardFooterDate>
                       </CarCardFooterPeriod>
                     </CarCardFooter>

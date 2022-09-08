@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   createStackNavigator, StackScreenProps
 } from "@react-navigation/stack";
@@ -8,18 +10,18 @@ import { Scheduling } from "../screens/Scheduling";
 import { SchedulingDetails } from "../screens/SchedulingDetails";
 import { Confirmation } from "../screens/Confirmation";
 
-import { CarDTO } from "../global/dtos/CarDTO";
+import { CarModelDTO } from "../database/models/Car";
 
 export type AppHomeStackParamList = {
   Cars: undefined;
   CarDetails: {
-    car: CarDTO;
+    car: CarModelDTO;
   };
   Scheduling: {
-    car: CarDTO;
+    car: CarModelDTO;
   };
   SchedulingDetails: {
-    car: CarDTO;
+    car: CarModelDTO;
     dates: string[];
   };
   Confirmation: {
