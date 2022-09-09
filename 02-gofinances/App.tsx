@@ -42,8 +42,6 @@ export default function App() {
     }
   }, [fontsLoaded]);
 
-  console.log(fontsLoaded);
-
   if (!fontsLoaded) {
     return null;
   }
