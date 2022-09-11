@@ -191,6 +191,7 @@ export function Register() {
                 />
               </TransactionTypeContainer>
               <CategorySelectButton
+                testID="category-select-button"
                 name={selectedCategory?.name ?? 'Categoria'}
                 onPress={handleOpenCategorySelectModal}
               />
@@ -202,7 +203,7 @@ export function Register() {
           </Form>
         </Container>
       </TouchableWithoutFeedback>
-      <Modal visible={isCategoryModalOpen}>
+      <Modal testID="category-modal" visible={isCategoryModalOpen}>
         <CategorySelectModal
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
