@@ -94,6 +94,10 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
         };
 
         saveSignedInUser(signedInUser);
+      } else if (type === 'cancel') {
+        throw new Error('Autenticação cancelada');
+      } else {
+        throw new Error('Erro desconhecido');
       }
             
     } catch (error) {
