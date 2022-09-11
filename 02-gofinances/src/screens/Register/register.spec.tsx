@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { ThemeProvider } from 'styled-components/native';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -25,7 +25,7 @@ const Providers: React.FC<React.PropsWithChildren> = ({ children }) => (
 );
 
 describe('Register Screen', () => {
-  it('should open category modal when user clicks on the category button', () => {
+  it('should open category modal when user clicks on the category button', async () => {
     const { getByTestId } = render(
       <Register />,
       {
@@ -40,6 +40,8 @@ describe('Register Screen', () => {
 
     fireEvent.press(categorySelectButton);
 
-    expect(categoryModal.props.visible).toBe(true);
+    await waitFor(() => {
+      expect(categoryModal.props.visible).toBe(true);
+    }, { timeout: 1200 });
   });
 });

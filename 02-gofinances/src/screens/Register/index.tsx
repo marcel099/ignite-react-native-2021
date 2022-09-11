@@ -87,7 +87,9 @@ export function Register() {
   }
 
   function handleOpenCategorySelectModal() {
+    // setTimeout(() => {
     setIsCategoryModalOpen(true);
+    // }, 1000);
   }
 
   function handleCloseCategorySelectModal() {
