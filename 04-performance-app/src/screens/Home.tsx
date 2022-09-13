@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { FriendList } from '../components/FriendList';
+
+interface FriendData {
+  id: number;
+  name: string;
+  likes: number;
+}
 
 export function Home() {
   const [name, setName] = useState('');
@@ -14,13 +20,27 @@ export function Home() {
 
       const data = await response.json();
 
-      console.log(data);
+      const online
+        = `${new Date().getHours()}:${new Date().getMinutes()}`;
 
-      setFriends(data);
+      const formattedData = data.map((item: FriendData) => {
+        return {
+          id: item.id,
+          name: item.name,
+          likes: item.likes,
+          online,
+        }
+      });
+
+      setFriends(formattedData);
     } catch(error) {
       console.log(error);
     }
   }
+
+  const handleFollow = useCallback(() => {
+    console.log('follow friend');
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -39,9 +59,7 @@ export function Home() {
         onPress={handleSearch}
       />
 
-      <ScrollView style={styles.list}>
-        <FriendList data={friends} />
-      </ScrollView>
+      <FriendList data={friends} follow={handleFollow} />
     </View>
   );
 }
