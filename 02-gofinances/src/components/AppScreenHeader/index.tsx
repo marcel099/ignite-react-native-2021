@@ -1,4 +1,5 @@
 import {
+  Container,
   Header,
   Title,
 } from "./styles";
@@ -9,8 +10,10 @@ interface Props {
 
 export function AppScreenHeader({ title }: Props) {
   return (
-    <Header>
-      <Title>{title}</Title>
-    </Header>
+    <Container>
+      <Header>
+        <Title>{title}</Title>
+      </Header>
+    </Container>
   );
 }

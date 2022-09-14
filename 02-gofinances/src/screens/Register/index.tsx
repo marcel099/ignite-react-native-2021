@@ -205,7 +205,11 @@ export function Register() {
           </Form>
         </Container>
       </TouchableWithoutFeedback>
-      <Modal testID="category-modal" visible={isCategoryModalOpen}>
+      <Modal
+        testID="category-modal"
+        visible={isCategoryModalOpen}
+        statusBarTranslucent
+      >
         <CategorySelectModal
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}

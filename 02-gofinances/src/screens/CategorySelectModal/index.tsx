@@ -31,7 +31,7 @@ export function CategorySelectModal({
 
       <FlatList
         data={categories}
-        style={{ flex: 1, width: '100%' }}
+        style={{ flex: 1, width: '100%', marginTop: 24 }}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <CategoryItem
