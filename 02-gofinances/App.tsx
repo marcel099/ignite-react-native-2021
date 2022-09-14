@@ -17,20 +17,14 @@ import { TransactionsContextProvider } from './src/contexts/TransactionsContext'
 import { theme } from './src/global/styles/theme';
 import { AppRoutes } from "./src/routes";
 
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_500Medium,
     Poppins_700Bold,
   });
-
-  useEffect(() => {
-    const showSplashScreen = async () => {
-      await SplashScreen.preventAutoHideAsync();
-    };
-
-    showSplashScreen();
-  }, []);
 
   useEffect(() => {
     const hideSplashScreen = async () => {
