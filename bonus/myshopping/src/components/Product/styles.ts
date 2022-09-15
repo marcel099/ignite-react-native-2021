@@ -29,7 +29,7 @@ export const Title = styled.Text<TitleProps>`
   text-decoration-line: ${({ done }) => done ? 'line-through' : 'none'};
 `;
 
-export const Quantity = styled.Text`
+export const Amount = styled.Text`
   font-size: 14px;
   font-family: ${({ theme }) => theme.FONTS.REGULAR};
   color: ${({ theme }) => theme.COLORS.GRAY800}; 

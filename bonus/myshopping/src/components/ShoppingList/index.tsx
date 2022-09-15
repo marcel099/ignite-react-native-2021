@@ -1,13 +1,34 @@
-import React, { useState } from 'react';
-import { FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, FlatList } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
 import { styles } from './styles';
 import { Product, ProductProps } from '../Product';
 
-import { shoppingListExample } from '../../utils/shopping.list.data';
-
 export function ShoppingList() {
-  const [products, setProducts] = useState<ProductProps[]>(shoppingListExample);
+  const [products, setProducts] = useState<ProductProps[]>([]);
+
+  useEffect(() => {
+    const subscribe = firestore()
+      .collection('products')
+      .onSnapshot(querySnapshot  => {
+        try {
+          const data = querySnapshot.docs.map(doc => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            }
+          }) as ProductProps[];
+
+          setProducts(data);
+        } catch (error) {
+          Alert.alert('Não foi possível carregar os produtos');
+          console.log(error);
+        }
+      });
+
+    return () => subscribe();
+  }, []);
 
   return (
     <FlatList
