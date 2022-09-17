@@ -12,6 +12,7 @@ import { useFonts } from 'expo-font';
 import { ThemeProvider } from 'styled-components/native'
 
 import { SignIn } from '@screens/SignIn';
+import { AuthContextProvider } from "@contexts/AuthContext";
 import { theme } from '@theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -44,9 +45,11 @@ export function App() {
         translucent
       />
       <ThemeProvider theme={theme}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <SignIn />
-        </GestureHandlerRootView>
+        <AuthContextProvider>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <SignIn />
+          </GestureHandlerRootView>
+        </AuthContextProvider>
       </ThemeProvider>
     </>
   );

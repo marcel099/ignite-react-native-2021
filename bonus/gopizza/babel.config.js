@@ -16,7 +16,9 @@ module.exports = function(api) {
           alias: {
             '@components': './src/components',
             '@screens': './src/screens',
+            '@contexts': './src/contexts',
             '@assets': './src/shared/assets',
+            '@configs': './src/shared/configs',
             '@theme': './src/shared/theme/index.ts',
           }
         }
