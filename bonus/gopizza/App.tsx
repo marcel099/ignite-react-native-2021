@@ -1,20 +1,22 @@
 import React, { useEffect } from 'react';
-import { View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   DMSans_400Regular,
 } from '@expo-google-fonts/dm-sans';
 import {
   DMSerifDisplay_400Regular
 } from '@expo-google-fonts/dm-serif-display';
-import { useFonts } from "expo-font";
+import { useFonts } from 'expo-font';
 import { ThemeProvider } from 'styled-components/native'
 
+import { SignIn } from '@screens/SignIn';
 import { theme } from '@theme';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function App() {
+export function App() {
   const [hasFontsLoaded] = useFonts({
     DMSans_400Regular,
     DMSerifDisplay_400Regular,
@@ -35,11 +37,18 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <View>
-        {/* <Test /> */}
-      </View>
-    </ThemeProvider>
+    <>
+      <StatusBar
+        style="light"
+        backgroundColor="transparent"
+        translucent
+      />
+      <ThemeProvider theme={theme}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <SignIn />
+        </GestureHandlerRootView>
+      </ThemeProvider>
+    </>
   );
 }
 
