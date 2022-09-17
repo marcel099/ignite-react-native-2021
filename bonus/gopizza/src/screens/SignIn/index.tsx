@@ -16,13 +16,17 @@ import {
 } from './styles';
 
 export function SignIn() {
-  const { isSigningIn, signIn } = useAuth();
+  const { isSigningIn, signIn, forgotPassword } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   function handleSignIn() {
     signIn(email, password);
+  }
+
+  function handleForgotPassword() {
+    forgotPassword(email);
   }
 
   return (
@@ -53,9 +57,11 @@ export function SignIn() {
             value={password}
           />
 
-          <ForgotPasswordButton>
+          <ForgotPasswordButton
+            onPress={handleForgotPassword}
+          >
             <ForgotPasswordLabel>
-              Esqueci minha senha
+              Esqueci minha senha 
             </ForgotPasswordLabel>
           </ForgotPasswordButton>
 

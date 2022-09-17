@@ -23,6 +23,7 @@ interface AuthContextData {
   isSigningIn: boolean; 
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextData);
@@ -103,6 +104,29 @@ export function AuthContextProvider({
     setUser(null);
   }
 
+  async function forgotPassword(email: string) {
+    try {
+      if (!email) {
+        return Alert.alert('Redefinir senha', 'Informe o e-mail.');
+      }
+
+      await auth()
+        .sendPasswordResetEmail(email);
+
+      Alert.alert(
+        'Redefinir senha',
+        'Enviamos um link ao seu e-mail para redefinir sua senha.'
+      );
+    } catch (error) {
+      console.log(error);
+
+      Alert.alert(
+        'Redefinir senha',
+        'Não foi possível enviar o e-mail para redefinir a senha.'
+      )
+    }
+  }
+
   useEffect(() => {
     loadUser();
   }, []);
@@ -113,6 +137,7 @@ export function AuthContextProvider({
       isSigningIn,
       signIn,
       signOut,
+      forgotPassword,
     }}>
       { children }
     </AuthContext.Provider>
