@@ -22,6 +22,7 @@ interface AuthContextData {
   user: User | null;
   isSigningIn: boolean; 
   signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext({} as AuthContextData);
@@ -44,7 +45,6 @@ export function AuthContextProvider({
 
     if (loadedUser !== null) {
       const userData = JSON.parse(loadedUser);
-      console.log(userData);
       setUser(userData);
     }
 
@@ -97,6 +97,12 @@ export function AuthContextProvider({
     }
   }
 
+  async function signOut() {
+    await auth().signOut();
+    AsyncStorage.removeItem(SIGNED_IN_USER_COLLECTION);
+    setUser(null);
+  }
+
   useEffect(() => {
     loadUser();
   }, []);
@@ -106,6 +112,7 @@ export function AuthContextProvider({
       user,
       isSigningIn,
       signIn,
+      signOut,
     }}>
       { children }
     </AuthContext.Provider>
