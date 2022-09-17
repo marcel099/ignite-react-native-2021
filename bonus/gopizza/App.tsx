@@ -11,7 +11,7 @@ import {
 import { useFonts } from 'expo-font';
 import { ThemeProvider } from 'styled-components/native'
 
-import { SignIn } from '@screens/SignIn';
+import { Product } from '@screens/Product';
 import { AuthContextProvider } from "@contexts/AuthContext";
 import { theme } from '@theme';
 
@@ -47,7 +47,7 @@ export function App() {
       <ThemeProvider theme={theme}>
         <AuthContextProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <SignIn />
+            <Product />
           </GestureHandlerRootView>
         </AuthContextProvider>
       </ThemeProvider>
