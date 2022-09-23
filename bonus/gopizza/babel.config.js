@@ -17,6 +17,7 @@ module.exports = function(api) {
             '@components': './src/components',
             '@screens': './src/screens',
             '@contexts': './src/contexts',
+            '@routes': './src/routes',
             '@assets': './src/shared/assets',
             '@configs': './src/shared/configs',
             '@theme': './src/shared/theme/index.ts',

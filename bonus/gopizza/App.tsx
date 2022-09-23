@@ -11,8 +11,8 @@ import {
 import { useFonts } from 'expo-font';
 import { ThemeProvider } from 'styled-components/native'
 
-import { Home } from '@screens/Home';
 import { AuthContextProvider } from "@contexts/AuthContext";
+import { Routes } from '@routes/index';
 import { theme } from '@theme';
 
 SplashScreen.preventAutoHideAsync();
@@ -47,7 +47,7 @@ export function App() {
       <ThemeProvider theme={theme}>
         <AuthContextProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
-            <Home />
+            <Routes />
           </GestureHandlerRootView>
         </AuthContextProvider>
       </ThemeProvider>
