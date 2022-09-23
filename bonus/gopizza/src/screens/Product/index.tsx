@@ -12,7 +12,7 @@ import storage from '@react-native-firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
 
 import { Button } from '@components/Button';
-import { ButtonBack } from '@components/ButtonBack';
+import { BackButton } from '@components/BackButton';
 import { Input } from '@components/Input';
 import { InputPrice } from '@components/InputPrice';
 import { Photo } from '@components/Photo';
@@ -208,7 +208,7 @@ export function Product() {
     <Container behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header>
-          <ButtonBack onPress={handleGoBack} />
+          <BackButton onPress={handleGoBack} />
           <Title>Cadastrar</Title>
           {
             id !== undefined ? (

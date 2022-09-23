@@ -6,6 +6,7 @@ import {
 
 import { Home } from '@screens/Home';
 import { Product } from '@screens/Product';
+import { Order } from '@screens/Order';
 
 export type UserStackParamList = {
   Home: undefined;
@@ -30,9 +31,11 @@ export function UserStackRoutes() {
       screenOptions={{
         headerShown: false,
       }}
+      initialRouteName="Order"
     >
       <Screen name="Home" component={Home} />
       <Screen name="Product" component={Product} />
+      <Screen name="Order" component={Order} />
     </Navigator>
   )
 }

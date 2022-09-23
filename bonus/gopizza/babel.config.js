@@ -20,6 +20,7 @@ module.exports = function(api) {
             '@routes': './src/routes',
             '@assets': './src/shared/assets',
             '@configs': './src/shared/configs',
+            '@utils': './src/shared/utils',
             '@theme': './src/shared/theme/index.ts',
           }
         }

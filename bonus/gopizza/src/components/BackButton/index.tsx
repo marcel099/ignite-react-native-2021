@@ -7,7 +7,7 @@ import {
   Container,
 } from './styles';
 
-export function ButtonBack({ ...rest }: TouchableOpacityProps) {
+export function BackButton({ ...rest }: TouchableOpacityProps) {
   const theme = useTheme();
 
   return (
