@@ -3,7 +3,8 @@ import {
   Alert,
   Platform,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
@@ -47,7 +48,7 @@ interface ProductDTO {
 export function Product() {
   const navigation = 
     useNavigation<UserStackScreenProp<'Product'>['navigation']>();
-  const { params } = 
+  const { params: { id } } = 
     useRoute<UserStackScreenProp<'Product'>['route']>();
 
   const [image, setImage] = useState<string | null>(null);
@@ -135,12 +136,11 @@ export function Product() {
           photo_path: reference.fullPath,
         });
 
-      Alert.alert('Cadastro', 'Pizza cadastrada com sucesso.');
+      handleGoBack();
     } catch (error) {
       console.log(error);
-      Alert.alert('Cadastro', 'Não foi possível cadastrar a pizza.');
-    } finally {
       setIsSaving(false);
+      Alert.alert('Cadastro', 'Não foi possível cadastrar a pizza.');
     }
   }
 
@@ -148,8 +148,33 @@ export function Product() {
     navigation.pop();
   }
 
+  async function handleDelete() {
+    try {
+      if (id === undefined || imagePath === null) {
+        throw new Error('Valores necessários não preenchidos');
+      }
+
+      await firestore()
+        .collection('pizzas')
+        .doc(id)
+        .delete();
+
+      await storage()
+        .ref(imagePath)
+        .delete();
+
+      handleGoBack();
+    } catch (error) {
+      console.log(error);
+      Alert.alert(
+        'Falha ao excluir',
+        'Não foi possível excluir esta pizza'
+      );
+    }
+  }
+
   useEffect(() => {
-    async function fetchPizza(id: string) {
+    async function fetchPizza() {
       try {
         const response = await firestore()
           .collection('pizzas')
@@ -174,10 +199,10 @@ export function Product() {
       }
     }
 
-    if (params.id) {
-      fetchPizza(params.id);
+    if (id) {
+      fetchPizza();
     }
-  }, [params.id])
+  }, [id])
 
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -185,17 +210,27 @@ export function Product() {
         <Header>
           <ButtonBack onPress={handleGoBack} />
           <Title>Cadastrar</Title>
-          <TouchableOpacity>
-            <DeleteLabel>Deletar</DeleteLabel>
-          </TouchableOpacity>
+          {
+            id !== undefined ? (
+              <TouchableOpacity onPress={handleDelete}>
+                <DeleteLabel>Deletar</DeleteLabel>
+              </TouchableOpacity>
+            ) : (
+              <View />
+            )
+          }
         </Header>
         <Upload>
           <Photo uri={image} />
-          <PickImageButton
-            title="Carregar"
-            type="secondary"
-            onPress={handlePickImage}
-          />
+          {
+            id === undefined && (
+              <PickImageButton
+                title="Carregar"
+                type="secondary"
+                onPress={handlePickImage}
+              />
+            )
+          }
         </Upload>
         <Form>
           <InputGroup>
@@ -209,7 +244,9 @@ export function Product() {
           <InputGroup>
             <InputGroupHeader>
               <Label>Descrição</Label>
-              <MaxCharacters>0 de 60 caracteres</MaxCharacters>
+              <MaxCharacters>
+                {description.length} de 60 caracteres
+              </MaxCharacters>
             </InputGroupHeader>
             <Input
               multiline
@@ -237,11 +274,16 @@ export function Product() {
               value={priceSizeG}
             />
           </InputGroup>
-          <Button
-            title="Cadastrar pizza"
-            isLoading={isSaving}
-            onPress={handleAdd}
-          />
+          
+          {
+            id === undefined && (
+              <Button
+                title="Cadastrar Pizza"
+                isLoading={isSaving}
+                onPress={handleAdd}
+              />
+            )
+          }
         </Form>
       </ScrollView>
     </Container>
