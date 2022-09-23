@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components/native';
-import firestore from '@react-native-firebase/firestore';
 
 import happyEmoji from '@assets/happy.png';
 import { Search } from '@components/Search';
 import { ProductCard, ProductDTO } from '@components/ProductCard';
+import { UserStackScreenProp } from '@routes/user.stack.routes';
 
 import {
   Container,
@@ -21,6 +23,8 @@ import {
 
 export function Home() {
   const theme = useTheme();
+  const navigation =
+    useNavigation<UserStackScreenProp<'Home'>['navigation']>();
 
   const [pizzas, setPizzas] = useState<ProductDTO[]>([]);
   const [search, setSearch] = useState('');
@@ -60,6 +64,10 @@ export function Home() {
     fetchPizzas('');
   }
 
+  function handleOpen(id: string) {
+    navigation.navigate('Product', { id });
+  }
+
   useEffect(() => {
     fetchPizzas('');
   }, [])
@@ -97,7 +105,10 @@ export function Home() {
         data={pizzas}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
-          <ProductCard data={item} />
+          <ProductCard
+            onPress={() => handleOpen(item.id)}
+            data={item}
+          />
         )}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{

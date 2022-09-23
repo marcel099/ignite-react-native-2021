@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Platform,
   ScrollView,
   TouchableOpacity
 } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
@@ -14,6 +15,7 @@ import { ButtonBack } from '@components/ButtonBack';
 import { Input } from '@components/Input';
 import { InputPrice } from '@components/InputPrice';
 import { Photo } from '@components/Photo';
+import { UserStackScreenProp } from '@routes/user.stack.routes';
 
 import {
   Container,
@@ -29,8 +31,27 @@ import {
   MaxCharacters,
 } from './styles';
 
+interface ProductDTO {
+  id: string;
+  name: string;
+  description: string;
+  prices_sizes: {
+    p: string;
+    m: string;
+    g: string;
+  };
+  photo_url: string;
+  photo_path: string;
+}
+
 export function Product() {
+  const navigation = 
+    useNavigation<UserStackScreenProp<'Product'>['navigation']>();
+  const { params } = 
+    useRoute<UserStackScreenProp<'Product'>['route']>();
+
   const [image, setImage] = useState<string | null>(null);
+  const [imagePath, setImagePath] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [priceSizeP, setPriceSizeP] = useState<string>('');
@@ -123,11 +144,46 @@ export function Product() {
     }
   }
 
+  async function handleGoBack() {
+    navigation.pop();
+  }
+
+  useEffect(() => {
+    async function fetchPizza(id: string) {
+      try {
+        const response = await firestore()
+          .collection('pizzas')
+          .doc(id)
+          .get();
+
+        const product = response.data() as ProductDTO;
+
+        setName(product.name);
+        setImage(product.photo_url);
+        setImagePath(product.photo_path);
+        setDescription(product.description);
+        setPriceSizeP(product.prices_sizes.p);
+        setPriceSizeM(product.prices_sizes.m);
+        setPriceSizeG(product.prices_sizes.g);
+      } catch(error) {
+        console.log(error);
+        Alert.alert(
+          'Falha no carregamento',
+          'Não foi possível carregar as informações da pizza.'
+        );
+      }
+    }
+
+    if (params.id) {
+      fetchPizza(params.id);
+    }
+  }, [params.id])
+
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header>
-          <ButtonBack />
+          <ButtonBack onPress={handleGoBack} />
           <Title>Cadastrar</Title>
           <TouchableOpacity>
             <DeleteLabel>Deletar</DeleteLabel>
