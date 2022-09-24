@@ -32,7 +32,7 @@ export function UserStackRoutes() {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="Orders"
+      initialRouteName="Home"
     >
       <Screen name="Home" component={Home} />
       <Screen name="Product" component={Product} />
