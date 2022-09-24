@@ -1,8 +1,11 @@
-import React from 'react';
-import { FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, FlatList } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
-import { OrderCard } from '@components/OrderCard';
+import { useAuth } from '@contexts/AuthContext';
 import { ItemSeparator } from '@components/ItemSeparator';
+import { OrderCard, OrderDTO } from '@components/OrderCard';
+import { StatusTypeProps } from '@components/OrderCard/styles';
 
 import {
   Container,
@@ -11,6 +14,30 @@ import {
 } from './styles';
 
 export function Orders() {
+  const { user } = useAuth();
+
+  const [orders, setOrders] = useState<OrderDTO[]>([]);
+
+  useEffect(() => {
+    if (user?.id) {
+      const subscribe = firestore()
+        .collection('orders')
+        .where('waiter_id', '==', user.id)
+        .onSnapshot(querySnapshot => {
+          const data = querySnapshot.docs.map(doc => {
+            return {
+              id: doc.id,
+              ...doc.data()
+            }
+          }) as OrderDTO[];
+
+          setOrders(data);
+        });
+
+      return () => subscribe();
+    }
+  }, [user?.id]);
+
   return (
     <Container>
       <Header>
@@ -18,10 +45,10 @@ export function Orders() {
       </Header>
 
       <FlatList
-        data={['1', '2', '3']}
-        keyExtractor={item => item}
+        data={orders}
+        keyExtractor={item => item.id}
         renderItem={({ item, index}) => (
-          <OrderCard index={index} />
+          <OrderCard index={index} data={item} />
         )}
         numColumns={2}
         showsVerticalScrollIndicator={false}

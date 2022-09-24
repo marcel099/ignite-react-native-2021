@@ -11,23 +11,37 @@ import {
   StatusLabel,
 } from './styles';
 
-interface Props extends TouchableOpacityProps {
-  index: number;
+export interface OrderDTO {
+  id: string;
+  tableNumber: number;
+  quantity: number;
+  totalPrice: number;
+  size: 'p' | 'm' | 'g';
+  status: StatusTypeProps
+  pizza: {
+    name: string;
+    photo_url: string;
+  }
 }
 
-export function OrderCard({ index, ...rest}: Props) {
+interface Props extends TouchableOpacityProps {
+  index: number;
+  data: OrderDTO;
+}
+
+export function OrderCard({ index, data, ...rest}: Props) {
   return (
     <Container index={index} {...rest}>
-      <Image source={{ uri: 'https://github.com/marcel099.png'}} />
+      <Image source={{ uri: data.pizza.photo_url}} />
 
-      <Name>4 Queijos</Name>
+      <Name>{data.pizza.name}</Name>
 
       <Description>
-        Mesa 5 - Qnt: 1
+        Mesa {data.tableNumber} - Qnt: {data.quantity}
       </Description>
 
-      <StatusContainer status="Preparando">
-        <StatusLabel status="Preparando">Preparando</StatusLabel>
+      <StatusContainer status={data.status}>
+        <StatusLabel status={data.status}>{data.status}</StatusLabel>
       </StatusContainer>
     </Container>
   );
