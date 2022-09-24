@@ -25,7 +25,6 @@ export function Order() {
   const [selectedPizzaTypeId, setSelectedPizzaTypeId]
     = useState<string | null>(null);
 
-  console.log(selectedPizzaTypeId);
   return (
     <Container behavior={ Platform.OS == 'ios' ? 'padding' : undefined }>
       <ContentScroll>
