@@ -5,7 +5,6 @@ import firestore from '@react-native-firebase/firestore';
 import { useAuth } from '@contexts/AuthContext';
 import { ItemSeparator } from '@components/ItemSeparator';
 import { OrderCard, OrderDTO } from '@components/OrderCard';
-import { StatusTypeProps } from '@components/OrderCard/styles';
 
 import {
   Container,
@@ -17,6 +16,30 @@ export function Orders() {
   const { user } = useAuth();
 
   const [orders, setOrders] = useState<OrderDTO[]>([]);
+
+  function handlePizzaDelivery(id: string) {
+    Alert.alert(
+      'Pedido',
+      'Confirmar que a pizza foi entregue?',
+      [
+        {
+          text: 'Não',
+          style: 'cancel'
+        },
+        {
+          text: 'Sim',
+          onPress: () => {
+            firestore()
+              .collection('orders')
+              .doc(id)
+              .update({
+                status: 'Entregue'
+              })
+          }
+        }
+      ]
+    )
+  }
 
   useEffect(() => {
     if (user?.id) {
@@ -48,7 +71,12 @@ export function Orders() {
         data={orders}
         keyExtractor={item => item.id}
         renderItem={({ item, index}) => (
-          <OrderCard index={index} data={item} />
+          <OrderCard
+            index={index}
+            data={item}
+            disabled={item.status !== 'Pronto'}
+            onPress={() => handlePizzaDelivery(item.id)}
+          />
         )}
         numColumns={2}
         showsVerticalScrollIndicator={false}
