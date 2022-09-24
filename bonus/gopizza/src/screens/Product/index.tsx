@@ -195,7 +195,7 @@ export function Product() {
     if (id) {
       fetchPizza();
     }
-  }, [id])
+  }, [id]);
 
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
