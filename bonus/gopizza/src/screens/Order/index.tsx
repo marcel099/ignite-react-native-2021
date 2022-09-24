@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Platform } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 import { BackButton } from '@components/BackButton';
 import { Button } from '@components/Button';
 import { Input } from '@components/Input';
 import { RadioButton } from '@components/RadioButton';
+import { UserStackScreenProp } from '@routes/user.stack.routes';
 import { pizzaTypes } from '@utils/pizzaTypes'
 
 import {
@@ -22,15 +24,22 @@ import {
 } from './styles';
 
 export function Order() {
+  const navigation = 
+    useNavigation<UserStackScreenProp<'Order'>['navigation']>();
+
   const [selectedPizzaTypeId, setSelectedPizzaTypeId]
     = useState<string | null>(null);
+
+  async function handleGoBack() {
+    navigation.pop();
+  }
 
   return (
     <Container behavior={ Platform.OS == 'ios' ? 'padding' : undefined }>
       <ContentScroll>
         <Header>
           <BackButton
-            onPress={() => {}}
+            onPress={handleGoBack}
             style={{ marginBottom: 108 }}
           />
         </Header>

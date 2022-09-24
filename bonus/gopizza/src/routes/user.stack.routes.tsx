@@ -4,10 +4,13 @@ import {
   NativeStackScreenProps,
 } from '@react-navigation/native-stack';
 
+import { useAuth } from '@contexts/AuthContext';
+
 import { Home } from '@screens/Home';
 import { Product } from '@screens/Product';
 import { Order } from '@screens/Order';
-import { Orders } from '@screens/Orders';
+
+import { UserTabRoutes } from './user.tab.routes';
 
 export type UserStackParamList = {
   Home: undefined;
@@ -17,16 +20,18 @@ export type UserStackParamList = {
   Order: {
     id?: string;
   };
-  Orders: undefined;
+  UserTabRoutes: undefined;
 }
 
 export type UserStackScreenProp<T extends keyof UserStackParamList>
   = NativeStackScreenProps<UserStackParamList, T>;
 
-const { Navigator, Screen } =
+const { Navigator, Screen, Group } =
   createNativeStackNavigator<UserStackParamList>();
 
 export function UserStackRoutes() {
+  const { user } = useAuth();
+
   return (
     <Navigator
       screenOptions={{
@@ -34,10 +39,19 @@ export function UserStackRoutes() {
       }}
       initialRouteName="Home"
     >
-      <Screen name="Home" component={Home} />
-      <Screen name="Product" component={Product} />
-      <Screen name="Order" component={Order} />
-      <Screen name="Orders" component={Orders} />
+      {
+        user?.isAdmin ? (
+          <Group>
+            <Screen name="Home" component={Home} />
+            <Screen name="Product" component={Product} />
+          </Group>
+        ) : (
+          <Group>
+            <Screen name="UserTabRoutes" component={UserTabRoutes} />
+            <Screen name="Order" component={Order} />
+          </Group>
+        )
+      }
     </Navigator>
   )
 }

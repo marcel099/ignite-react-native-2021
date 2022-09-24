@@ -64,20 +64,13 @@ export function Product() {
   async function handlePickImage() {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
-    // console.log(status);
-
     if (status === 'granted') {
-      // console.log('should launch')
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         aspect: [4, 4]
       });
 
-      // console.log('was it cancelled?')
-      // console.log(result.cancelled)
-
       if (!result.cancelled) {
-        // console.log(result.uri)
         setImage(result.uri);
       }
     }

@@ -6,6 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components/native';
 
 import happyEmoji from '@assets/happy.png';
+import { useAuth } from '@contexts/AuthContext';
 import { Search } from '@components/Search';
 import { ProductCard, ProductDTO } from '@components/ProductCard';
 import { UserStackScreenProp } from '@routes/user.stack.routes';
@@ -26,6 +27,8 @@ export function Home() {
   const theme = useTheme();
   const navigation =
     useNavigation<UserStackScreenProp<'Home'>['navigation']>();
+
+  const { signOut, user } = useAuth();
 
   const [pizzas, setPizzas] = useState<ProductDTO[]>([]);
   const [search, setSearch] = useState('');
@@ -52,7 +55,7 @@ export function Home() {
 
     } catch ( error ) {
       console.log(error);
-      Alert.alert('Consulta', 'Não foi possível realizar a consulta');
+      Alert.alert('Consulta', 'Não foi possível realizar a consulta.');
     }
   }
 
@@ -66,11 +69,22 @@ export function Home() {
   }
 
   function handleOpen(id: string) {
-    navigation.navigate('Product', { id });
+    const route = user?.isAdmin ? 'Product' : 'Order';
+
+    navigation.navigate(route, { id });
   }
 
   function handleAdd() {
     navigation.navigate('Product', {});
+  }
+
+  async function handleSignOut() {
+    try {
+      await signOut();
+    } catch ( error ) {
+      console.log(error);
+      Alert.alert('Logout', 'Não foi possível realizar sair da conta.');
+    }
   }
 
   useFocusEffect(
@@ -84,10 +98,10 @@ export function Home() {
       <Header>
         <Greeting>
           <GreetingEmoji source={happyEmoji} />
-          <GreetingText>Olá, Admin</GreetingText> 
+          <GreetingText>Olá, {user?.name ?? ''}</GreetingText> 
         </Greeting>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleSignOut}>
           <MaterialIcons
             name="logout"
             color={theme.COLORS.TITLE}
@@ -125,11 +139,15 @@ export function Home() {
         }}
       />
 
-      <NewProductButton
-        title="Cadastrar Pizza"
-        type="secondary"
-        onPress={handleAdd}
-      />
+      {
+        user?.isAdmin && (
+          <NewProductButton
+            title="Cadastrar Pizza"
+            type="secondary"
+            onPress={handleAdd}
+          />
+        )
+      }
     </Container>
   );
 }
